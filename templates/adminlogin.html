@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <title>ADMIN LOGIN</title>
+</head>
+<body>
+    <main data-theme="dark" style="padding-left:20%;padding-right:20%">
+        <article>
+                <form id="login-form">
+                    <label>
+                        Username:-
+                        <input type="text" id="user" required/>
+                    </label>
+                    <label>
+                        Password:-
+                        <input type="password" id="pswd" required>
+                    </label>
+                    <button type="submit">LOGIN</button>
+                </form>
+        </article>
+    </main>
+    <script>
+        $(function() {
+            $('#login-form').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/verify',
+                    data: '{"user":"'+(document.getElementById("user").value)+'","pswd":"'+(document.getElementById("pswd").value)+'"}',
+                    error: function(){alert("Request Failed");},
+                    success: function(response){
+                        localStorage.setItem("auth",response);
+                        document.location.href="/admin"
+                    }
+        });
+        return false;
+    }); 
+})
+    </script>
+</body>
+</html>
