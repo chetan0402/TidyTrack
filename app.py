@@ -317,11 +317,11 @@ def sendOTP():
     global otpStorage
     otp = random.randint(111111, 999999)
     otpStorage[sch_no] = otp
-    URL = "https://bulksms.bsnl.in:5010/api/Send_SMS"
+    url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
     if debug == "true":
         return Response(f"OTP has been sent to {phone_number}. If you wish to change the phone number, contact admins",
                         status=200)
-    response = requests.post(URL, headers={
+    response = requests.post(url, headers={
         "Authorization": f"Bearer {config['auth']}",
         "Content-Type": "application/json;charset=utf-8"
     }, data=json.dumps({
