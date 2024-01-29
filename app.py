@@ -26,11 +26,12 @@ matplotlib.use('Agg')
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=25, host="10.3.1.19",
                                                         username=config["dbuser"],
                                                         password=config["dbpswd"])
-# TODO - Ask if this is the best practice
 rateLimitOTP = {}
 otpStorage = {}
 rateLimitSubmit = {}
+# TODO - schedule deleting objects
 lastTimeLimitReset = datetime.combine(date.today(), datetime.min.time()).timestamp()
+phoneData = json.load(open("phone.json", "r"))
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -205,8 +206,11 @@ def reload():
     if not verifyToken(request.headers.get("Authorization")):
         return Response(status=403)
     global config
+    global phoneData
     with open("config.json", "r") as configfile:
         config = json.load(configfile)
+    with open("phone.json", "r") as phoneFile:
+        phoneData = json.load(phoneFile)
     return Response(status=200)
 
 
@@ -231,7 +235,7 @@ def getTable():
         for ele in result:
             inner_list.append(ele)
         processed_list.append(inner_list)
-    return str(processed_list).replace("'", '"')
+    return json.dumps(processed_list)
 
 
 @app.route("/img/<path>", methods=["GET"])
@@ -242,7 +246,7 @@ def getIMG(path):
     return send_file(os.getcwd() + "\\img\\" + path, mimetype="image/png")
 
 
-def verifyToken(token):
+def verifyToken(token) -> bool:
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
         cur.execute('SELECT * FROM tidy_track.tokens WHERE idtokens=%s;', (token,))
@@ -259,7 +263,7 @@ def verifyToken(token):
         return True
 
 
-def genToken():
+def genToken() -> str:
     create_from = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     session_token = ""
     for i in range(0, 100):
@@ -267,7 +271,7 @@ def genToken():
     return session_token
 
 
-def saveToken(token, valid, userid):
+def saveToken(token, valid, userid) -> None:
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
         cur.execute("SELECT * FROM tidy_track.tokens WHERE user=%s", (userid,))
@@ -280,13 +284,13 @@ def saveToken(token, valid, userid):
         cur.close()
 
 
-# TODO - Complete this function
-# TODO - Request access for this db
-def getNOFromToken(token):
-    return 6268202512
+# TODO - switch to SQL
+def getNOFromToken(token) -> int:
+    global phoneData
+    return phoneData[str(getUserFromToken(token))]
 
 
-def getUserFromToken(token):
+def getUserFromToken(token) -> int:
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
         cur.execute("SELECT user FROM tidy_track.tokens WHERE idtokens=%s", (token,))
@@ -295,7 +299,7 @@ def getUserFromToken(token):
         return int(result[0])
 
 
-# TODO - check every possible error of otp
+# TODO - deal with OTP problem
 @app.route("/otp/send", methods=["POST"])
 def sendOTP():
     data = request.data.decode("utf-8")
