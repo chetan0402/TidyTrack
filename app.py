@@ -23,9 +23,9 @@ with open("bannedIP", "r") as file:
     banned: list = ast.literal_eval(file.read())
 app = Flask(__name__)
 matplotlib.use('Agg')
-mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=25, host="10.3.1.19",
+mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="pool", pool_size=25, host="10.3.1.19",
                                                         username=config["dbuser"],
-                                                        password=config["dbpswd"], database="tidy_trac")
+                                                        password=config["dbpswd"], database="tidy_track")
 
 
 class HandleOTP:
@@ -78,20 +78,20 @@ def index():
     rateLimitSubmit[sch_no] += 1
 
     time_rn = int(time.time())
-    localpath = f"""test-{time_rn}.png"""
-    imgpath = Path.home().joinpath("img").joinpath(localpath)
+    local_path = f"""test-{time_rn}.png"""
+    img_path = Path.home().joinpath("img").joinpath(local_path)
 
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
         cur.execute("""
         INSERT INTO main (feedback,imgpath,rating,locationcode,time,schno) VALUES (%s,%s,%s,%s,%s,%s);
         """, (
-            re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', ' ', data["name"]), localpath, data["rad"],
+            re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', ' ', data["name"]), local_path, data["rad"],
             re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', ' ', data["washroom"]),
             int(time.time()), sch_no))
         mydb.commit()
         cur.close()
-        Image.open(io.BytesIO(base64.b64decode(data["img"].replace("\\n", "").replace("\\", "")))).save(imgpath)
+        Image.open(io.BytesIO(base64.b64decode(data["img"].replace("\\n", "").replace("\\", "")))).save(img_path)
     return Response(status=200)
 
 
@@ -327,7 +327,8 @@ def sendOTP():
         phone_number = data["phone_no"]
         with mydb_pool.get_connection() as mydb:
             cur = mydb.cursor()
-            cur.execute("INSERT INTO tidy_track.userbase (name, schno, phone) VALUES (%s,%s,%s)",(name,sch_no,phone_number))
+            cur.execute("INSERT INTO tidy_track.userbase (name, schno, phone) VALUES (%s,%s,%s)",
+                        (name, sch_no, phone_number))
 
     if handleOTPobj.get(sch_no) is None:
         handleOTPobj[sch_no] = HandleOTP()
