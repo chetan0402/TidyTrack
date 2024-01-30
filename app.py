@@ -1,3 +1,4 @@
+import ast
 import base64
 import io
 import json
@@ -5,15 +6,14 @@ import os
 import random
 import re
 import time
-from datetime import datetime, timedelta, date
-import requests
-import ast
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import matplotlib
 import matplotlib.pylab as plt
 import mysql.connector
 import numpy as np
+import requests
 from PIL import Image
 from flask import Flask, request, send_file, render_template, Response, make_response
 
@@ -25,13 +25,36 @@ app = Flask(__name__)
 matplotlib.use('Agg')
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="mypool", pool_size=25, host="10.3.1.19",
                                                         username=config["dbuser"],
-                                                        password=config["dbpswd"])
-rateLimitOTP = {}
-otpStorage = {}
-rateLimitSubmit = {}
+                                                        password=config["dbpswd"], database="tidy_trac")
+
+
+class HandleOTP:
+    def __init__(self):
+        self.tries = 0
+        self.otp = random.randint(111111, 999999)
+        self.firstTime = 0
+        self.deleteTime = int(time.time()) + (config["otpLimit"]["banTime"] * 60 * 60)
+        self.nextSendTime = 0
+
+    def canSendOtp(self) -> bool:
+        global config
+        if self.nextSendTime < time.time():
+            return True
+        return False
+
+    def sendOTP(self) -> int:
+        self.tries += 1
+        if self.tries == 5:
+            self.nextSendTime = int(time.time()) + (config["otpLimit"]["banTime"] * 60 * 60)
+        else:
+            self.nextSendTime = int(time.time()) + (config["otpLimit"]["rateLimitTime"] * 60)
+        return self.otp
+
+
 # TODO - schedule deleting objects
-lastTimeLimitReset = datetime.combine(date.today(), datetime.min.time()).timestamp()
-phoneData = json.load(open("phone.json", "r"))
+handleOTPobj: dict[int, HandleOTP] = {}
+# TODO - add hard reset at start of day
+rateLimitSubmit = {}
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -40,12 +63,7 @@ def index():
         return render_template("index.html")
     if banned.__contains__(request.remote_addr):
         return Response(status=403)
-    global lastTimeLimitReset
     global rateLimitSubmit
-
-    if lastTimeLimitReset + (24 * 60 * 60 * 60) < int(time.time()):
-        rateLimitSubmit = {}
-        lastTimeLimitReset = int(time.time())
 
     data = request.data.decode("utf-8")
     data = json.loads(data)
@@ -65,7 +83,6 @@ def index():
 
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
-        cur.execute("USE tidy_track")
         cur.execute("""
         INSERT INTO main (feedback,imgpath,rating,locationcode,time,schno) VALUES (%s,%s,%s,%s,%s,%s);
         """, (
@@ -92,7 +109,6 @@ def create_chart():
 
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
-        cur.execute("USE tidy_track")
         if washroom_code is None:
             cur.execute("""
                                     SELECT * FROM main WHERE (time BETWEEN %s AND %s);
@@ -168,7 +184,6 @@ def adminLogin():
 
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
-        cur.execute("USE tidy_track")
         cur.execute('SELECT * FROM admin WHERE user=%s;', (user,))
         result = cur.fetchone()
         cur.close()
@@ -184,7 +199,8 @@ def adminLogin():
         return Response(status=401)
 
 
-# TODO - testing page change
+# TODO - testing whole admin panel and chaning to cookies
+# TODO - add secret client thingy
 @app.route("/admin", methods=["GET"])
 def admin():
     try:
@@ -206,11 +222,8 @@ def reload():
     if not verifyToken(request.headers.get("Authorization")):
         return Response(status=403)
     global config
-    global phoneData
     with open("config.json", "r") as configfile:
         config = json.load(configfile)
-    with open("phone.json", "r") as phoneFile:
-        phoneData = json.load(phoneFile)
     return Response(status=200)
 
 
@@ -284,10 +297,11 @@ def saveToken(token, valid, userid) -> None:
         cur.close()
 
 
-# TODO - switch to SQL
-def getNOFromToken(token) -> int:
-    global phoneData
-    return phoneData[str(getUserFromToken(token))]
+def getNOFromUser(user: int) -> int:
+    with mydb_pool.get_connection() as mydb:
+        cur = mydb.cursor()
+        cur.execute("SELECT phone from tidy_track.userbase WHERE schno=%s", user)
+        return cur.fetchone()[0]
 
 
 def getUserFromToken(token) -> int:
@@ -299,32 +313,36 @@ def getUserFromToken(token) -> int:
         return int(result[0])
 
 
-# TODO - deal with OTP problem
 @app.route("/otp/send", methods=["POST"])
 def sendOTP():
     data = request.data.decode("utf-8")
     data = json.loads(data)
     sch_no = data["sch_no"]
     debug = data["debug"]
-    if rateLimitOTP.get(sch_no) is None:
-        rateLimitOTP[sch_no] = {}
-        rateLimitOTP[sch_no]["try"] = 0
-        rateLimitOTP[sch_no]["time"] = 0
-    if rateLimitOTP[sch_no]["time"] > int(time.time()):
+
+    try:
+        phone_number = getNOFromUser(int(sch_no))
+    except:
+        name = data["stud_name"]
+        phone_number = data["phone_no"]
+        with mydb_pool.get_connection() as mydb:
+            cur = mydb.cursor()
+            cur.execute("INSERT INTO tidy_track.userbase (name, schno, phone) VALUES (%s,%s,%s)",(name,sch_no,phone_number))
+
+    if handleOTPobj.get(sch_no) is None:
+        handleOTPobj[sch_no] = HandleOTP()
+
+    if not handleOTPobj.get(sch_no).canSendOtp():
         return Response(status=429)
-    rateLimitOTP[sch_no]["try"] += 1
-    if rateLimitOTP[sch_no]["try"] == 5:
-        rateLimitOTP[sch_no][time] = int(time.time()) + (config["otpLimit"]["banTime"] * 24 * 60 * 60)
-    else:
-        rateLimitOTP[sch_no]["time"] = int(time.time()) + (config["otpLimit"]["rateLimitTime"] * 60)
-    phone_number = getNOFromToken(sch_no)
-    global otpStorage
-    otp = random.randint(111111, 999999)
-    otpStorage[sch_no] = otp
+
+    otp: int = handleOTPobj.get(sch_no).sendOTP()
+
     url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
+
     if debug == "true":
         return Response(f"OTP has been sent to {phone_number}. If you wish to change the phone number, contact admins",
                         status=200)
+
     response = requests.post(url, headers={
         "Authorization": f"Bearer {config['auth']}",
         "Content-Type": "application/json;charset=utf-8"
@@ -351,8 +369,8 @@ def verifyOTP():
     data = json.loads(data)
     debug = data["debug"]
     if debug == "true":
-        otpStorage[data["sch_no"]] = 111111
-    if int(data["otp"]) == otpStorage[data["sch_no"]]:
+        handleOTPobj.get(int(data["sch_no"])).otp = 111111
+    if int(data["otp"]) == handleOTPobj.get(int(data["sch_no"])).otp:
         token = genToken()
         saveToken(token, 31556926, data["sch_no"])
         return Response(token, status=200)
