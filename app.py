@@ -5,9 +5,11 @@ import json
 import os
 import random
 import re
+import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+import pytz
 
 import matplotlib
 import matplotlib.pylab as plt
@@ -16,6 +18,9 @@ import numpy as np
 import requests
 from PIL import Image
 from flask import Flask, request, send_file, render_template, Response, make_response
+import schedule
+
+DEBUG = True
 
 with open("config.json", "r") as file:
     config = json.load(file)
@@ -46,15 +51,45 @@ class HandleOTP:
         self.tries += 1
         if self.tries == 5:
             self.nextSendTime = int(time.time()) + (config["otpLimit"]["banTime"] * 60 * 60)
+            self.deleteTime = self.deleteTime
         else:
             self.nextSendTime = int(time.time()) + (config["otpLimit"]["rateLimitTime"] * 60)
         return self.otp
 
 
-# TODO - schedule deleting objects
-handleOTPobj: dict[int, HandleOTP] = {}
-# TODO - add hard reset at start of day
+handleOTPobj: dict[str, HandleOTP] = {}
 rateLimitSubmit = {}
+
+
+def run_ctns(interval=1):
+    cease_ctns_run = threading.Event()
+
+    class ScheduleThread(threading.Thread):
+        @classmethod
+        def run(cls):
+            while not cease_ctns_run.is_set():
+                schedule.run_pending()
+                time.sleep(interval)
+
+    continuous_thread = ScheduleThread()
+    continuous_thread.start()
+    return cease_ctns_run
+
+
+def resetSubmit():
+    global rateLimitSubmit
+    rateLimitSubmit = {}
+
+
+def resetOTP():
+    global handleOTPobj
+    for sch_no in handleOTPobj.keys():
+        if handleOTPobj.get(sch_no).deleteTime < int(time.time()):
+            handleOTPobj.pop(sch_no)
+
+
+schedule.every().day.at("00:00", pytz.timezone("Asia/Kolkata")).do(resetSubmit)
+schedule.every().minute.do(resetOTP)
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -199,7 +234,7 @@ def adminLogin():
         return Response(status=401)
 
 
-# TODO - testing whole admin panel and chaning to cookies
+# TODO - testing whole admin panel and changing to cookies
 # TODO - add secret client thingy
 @app.route("/admin", methods=["GET"])
 def admin():
@@ -300,7 +335,7 @@ def saveToken(token, valid, userid) -> None:
 def getNOFromUser(user: int) -> int:
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
-        cur.execute("SELECT phone from tidy_track.userbase WHERE schno=%s", user)
+        cur.execute("SELECT phone from tidy_track.userbase WHERE schno=%s", (user,))
         return cur.fetchone()[0]
 
 
@@ -313,6 +348,7 @@ def getUserFromToken(token) -> int:
         return int(result[0])
 
 
+# TODO - rejection of login+register
 @app.route("/otp/send", methods=["POST"])
 def sendOTP():
     data = request.data.decode("utf-8")
@@ -329,7 +365,10 @@ def sendOTP():
             cur = mydb.cursor()
             cur.execute("INSERT INTO tidy_track.userbase (name, schno, phone) VALUES (%s,%s,%s)",
                         (name, sch_no, phone_number))
+            mydb.commit()
+            cur.close()
 
+    global handleOTPobj
     if handleOTPobj.get(sch_no) is None:
         handleOTPobj[sch_no] = HandleOTP()
 
@@ -340,7 +379,7 @@ def sendOTP():
 
     url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
 
-    if debug == "true":
+    if debug == "true" and DEBUG:
         return Response(f"OTP has been sent to {phone_number}. If you wish to change the phone number, contact admins",
                         status=200)
 
@@ -369,9 +408,12 @@ def verifyOTP():
     data = request.data.decode("utf-8")
     data = json.loads(data)
     debug = data["debug"]
-    if debug == "true":
-        handleOTPobj.get(int(data["sch_no"])).otp = 111111
-    if int(data["otp"]) == handleOTPobj.get(int(data["sch_no"])).otp:
+
+    global handleOTPobj
+
+    if debug == "true" and DEBUG:
+        handleOTPobj.get(data["sch_no"]).otp = 111111
+    if int(data["otp"]) == handleOTPobj.get(data["sch_no"]).otp:
         token = genToken()
         saveToken(token, 31556926, data["sch_no"])
         return Response(token, status=200)
@@ -388,4 +430,5 @@ def updateJson():
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    run_ctns()
+    app.run(port=5000, debug=DEBUG)
