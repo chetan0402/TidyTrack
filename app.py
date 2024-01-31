@@ -248,7 +248,7 @@ def admin():
 
 @app.route("/get/locations", methods=["GET", "POST"])
 def getLocations():
-    return send_file("locations", mimetype="file/json")
+    return send_file("locations.json", mimetype="file/json")
 
 
 # TODO - adding reload button on the page
@@ -353,8 +353,8 @@ def getUserFromToken(token) -> int:
 def sendOTP():
     data = request.data.decode("utf-8")
     data = json.loads(data)
+    # TODO - verify if the sch no is valid or not
     sch_no = data["sch_no"]
-    debug = data["debug"]
 
     try:
         phone_number = getNOFromUser(int(sch_no))
