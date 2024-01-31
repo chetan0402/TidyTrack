@@ -380,8 +380,7 @@ def sendOTP():
     url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
 
     if debug == "true" and DEBUG:
-        return Response(f"OTP has been sent to {phone_number}. If you wish to change the phone number, contact admins",
-                        status=200)
+        return Response(f"{phone_number}",status=200)
 
     response = requests.post(url, headers={
         "Authorization": f"Bearer {config['auth']}",
@@ -399,8 +398,7 @@ def sendOTP():
             "Value": otp
         }]
     }))
-    return Response(f"OTP has been sent to {phone_number}. If you wish to change the phone number, contact admins",
-                    status=response.status_code)
+    return Response(f"{phone_number}",status=response.status_code)
 
 
 @app.route("/otp/verify", methods=["POST"])
