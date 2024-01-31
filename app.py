@@ -379,7 +379,7 @@ def sendOTP():
 
     url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
 
-    if debug == "true" and DEBUG:
+    if DEBUG:
         return Response(f"{phone_number}",status=200)
 
     response = requests.post(url, headers={
