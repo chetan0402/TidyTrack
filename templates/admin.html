@@ -69,10 +69,7 @@
             document.getElementById("img-block").innerHTML="";
 
             fetch("/chart?fromDate="+fromDate+"&toDate="+toDate,{
-                method:"POST",
-                headers:{
-                    "Authorization" : localStorage.getItem("auth")
-                }
+                method:"POST"
             }).then((response)=>{
                 return response.blob();
             }).then((blob)=>{
@@ -80,7 +77,7 @@
                 const imgElement = document.createElement("img");
                 imgElement.src=objURL;
                 document.getElementById("img-block").appendChild(imgElement);
-            }).catch((error)=>{
+            }).catch(()=>{
                 document.getElementById("img-block").innerHTML="<p>REQUEST FAILED</p>";
             })
 
@@ -99,10 +96,7 @@
 
         function loadPage(){
             fetch("/get/table?fromDate="+(Date.parse($("#from-date").val())/1000 - 19800)+"&toDate="+(Date.parse($("#to-date").val())/1000 - 19800),{
-                method:"POST",
-                headers:{
-                    "Authorization" : localStorage.getItem("auth")
-                }
+                method:"POST"
             }).then(
                 (response)=>{
                     if(response.ok){
@@ -166,11 +160,11 @@
         })
 
         function processMajorLocation(){
-            listObj=locationData[document.getElementById("gen-location").value]
+            listObj=Object.keys(locationData[document.getElementById("gen-location").value])
             i=0
             while(i<listObj.length){
                 element=document.createElement("option")
-                element.setAttribute("value",listObj[i])
+                element.setAttribute("value",locationData[document.getElementById("gen-location").value][listObj[i]])
                 element.innerText=listObj[i]
                 document.getElementById("gen-minor-location").appendChild(element)
                 i=i+1
@@ -196,7 +190,7 @@
                 var imgElement=document.createElement("img");
                 imgElement.src=objURL;
                 document.getElementById("img-block").appendChild(imgElement);
-            }).catch((error)=>{
+            }).catch(()=>{
                 document.getElementById("img-block").innerHTML="<p>REQUEST FAILED</p>";
             })
         }

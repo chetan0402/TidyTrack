@@ -10,36 +10,18 @@
 <body>
     <main data-theme="dark" style="padding-left:20%;padding-right:20%">
         <article>
-                <form id="login-form">
-                    <label>
+                <form action="/admin/verify" method="post">
+                    <label for="user">
                         Username:-
-                        <input type="text" id="user" required/>
+                        <input type="text" name="user" required/>
                     </label>
-                    <label>
+                    <label for="pswd">
                         Password:-
-                        <input type="password" id="pswd" required>
+                        <input type="password" name="pswd" required>
                     </label>
                     <button type="submit">LOGIN</button>
                 </form>
         </article>
     </main>
-    <script>
-        $(function() {
-            $('#login-form').submit(function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/admin/verify',
-                    data: '{"user":"'+(document.getElementById("user").value)+'","pswd":"'+(document.getElementById("pswd").value)+'"}',
-                    error: function(){alert("Request Failed");},
-                    success: function(response){
-                        localStorage.setItem("auth",response);
-                        document.location.href="/admin"
-                    }
-        });
-        return false;
-    }); 
-})
-    </script>
 </body>
 </html>

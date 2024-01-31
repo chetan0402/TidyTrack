@@ -17,7 +17,7 @@ import mysql.connector
 import numpy as np
 import requests
 from PIL import Image
-from flask import Flask, request, send_file, render_template, Response, make_response
+from flask import Flask, request, send_file, render_template, Response, make_response, redirect
 import schedule
 
 DEBUG = True
@@ -27,6 +27,7 @@ with open("config.json", "r") as file:
 with open("bannedIP", "r") as file:
     banned: list = ast.literal_eval(file.read())
 app = Flask(__name__)
+app.secret_key = "cjRyDenP01mafRArqkEpOn8OGpYhMFoc"
 matplotlib.use('Agg')
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="pool", pool_size=25, host="10.3.1.19",
                                                         username=config["dbuser"],
@@ -132,7 +133,7 @@ def index():
 
 @app.route("/chart", methods=["POST"])
 def create_chart():
-    if not verifyToken(request.headers.get("Authorization")):
+    if not verifyToken(request.cookies.get("Auth")):
         return Response(status=403)
 
     from_date = float(request.args.get("fromDate"))
@@ -212,10 +213,8 @@ def adminLoginPageServe():
 
 @app.route("/admin/verify", methods=["POST"])
 def adminLogin():
-    data = list(request.form.keys())[0]
-    data = json.loads(data)
-    user = data["user"]
-    pswd = data["pswd"]
+    user = request.form.get("user")
+    pswd = request.form.get("pswd")
 
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
@@ -223,23 +222,24 @@ def adminLogin():
         result = cur.fetchone()
         cur.close()
 
+    if result is None:
+        return Response(status=401)
+
     if pswd == result[1]:
         session_token = genToken()
         saveToken(session_token, 86400, user)
 
-        resp = make_response(session_token)
-        resp.set_cookie("auth", session_token, 86400)
+        resp = make_response(redirect("/admin"))
+        resp.set_cookie("Auth", session_token, 86400)
         return resp
     else:
         return Response(status=401)
 
 
-# TODO - testing whole admin panel and changing to cookies
-# TODO - add secret client thingy
 @app.route("/admin", methods=["GET"])
 def admin():
     try:
-        if not verifyToken(request.cookies["auth"]):
+        if not verifyToken(request.cookies["Auth"]):
             return Response(status=403)
         return render_template("admin.html")
     except KeyError:
@@ -254,7 +254,7 @@ def getLocations():
 # TODO - adding reload button on the page
 @app.route("/reload", methods=["POST"])
 def reload():
-    if not verifyToken(request.headers.get("Authorization")):
+    if not verifyToken(request.cookies.get("Auth")):
         return Response(status=403)
     global config
     with open("config.json", "r") as configfile:
@@ -264,7 +264,7 @@ def reload():
 
 @app.route("/get/table", methods=["POST"])
 def getTable():
-    if not verifyToken(request.headers.get("Authorization")):
+    if not verifyToken(request.cookies.get("Auth")):
         return Response(status=403)
 
     from_date = request.args.get("fromDate")
@@ -288,7 +288,7 @@ def getTable():
 
 @app.route("/img/<path>", methods=["GET"])
 def getIMG(path):
-    if not verifyToken(request.cookies["auth"]):
+    if not verifyToken(request.cookies["Auth"]):
         return Response(status=403)
 
     return send_file(os.getcwd() + "\\img\\" + path, mimetype="image/png")
