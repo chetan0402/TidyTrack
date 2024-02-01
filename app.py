@@ -264,6 +264,14 @@ def getLocations():
     return send_file("locations.json", mimetype="file/json")
 
 
+@app.route('/download')
+def download():
+    return send_file(config["latestAppLocalPath"], mimetype="file/apk")
+
+
+# TODO - serving privacy and TNC website
+
+
 @app.route("/reload", methods=["POST"])
 def reload():
     if not verifyToken(request.cookies.get("Auth")):
