@@ -24,8 +24,6 @@ DEBUG = True
 
 with open("config.json", "r") as file:
     config = json.load(file)
-with open("bannedIP", "r") as file:
-    banned: list = ast.literal_eval(file.read())
 app = Flask(__name__)
 app.secret_key = "cjRyDenP01mafRArqkEpOn8OGpYhMFoc"
 matplotlib.use('Agg')
@@ -42,6 +40,14 @@ class HandleOTP:
         self.deleteTime = int(time.time()) + (config["otpLimit"]["banTime"] * 60 * 60)
         self.nextSendTime = 0
 
+    def parse(self, string):
+        objData = json.loads(string)
+        self.tries = objData["tries"]
+        self.otp = objData["otp"]
+        self.firstTime = objData["firstTime"]
+        self.deleteTime = objData["deleteTime"]
+        self.nextSendTime = objData["nextSendTime"]
+
     def canSendOtp(self) -> bool:
         global config
         if self.nextSendTime < time.time():
@@ -56,6 +62,14 @@ class HandleOTP:
         else:
             self.nextSendTime = int(time.time()) + (config["otpLimit"]["rateLimitTime"] * 60)
         return self.otp
+
+    def __str__(self):
+        to_return = json.dumps({
+            "tries": self.tries,
+            "otp": self.otp,
+            "firstTime": self.firstTime,
+            "deleteTime": self.deleteTime,
+            "nextSendTime": self.nextSendTime})
 
 
 handleOTPobj: dict[str, HandleOTP] = {}
@@ -97,8 +111,7 @@ schedule.every().minute.do(resetOTP)
 def index():
     if request.method == "GET":
         return render_template("index.html")
-    if banned.__contains__(request.remote_addr):
-        return Response(status=403)
+
     global rateLimitSubmit
 
     data = request.data.decode("utf-8")
@@ -251,7 +264,6 @@ def getLocations():
     return send_file("locations.json", mimetype="file/json")
 
 
-# TODO - adding reload button on the page
 @app.route("/reload", methods=["POST"])
 def reload():
     if not verifyToken(request.cookies.get("Auth")):
@@ -348,19 +360,27 @@ def getUserFromToken(token) -> int:
         return int(result[0])
 
 
+def isValidSch(sch_no) -> bool:
+    pattern = re.compile(config["validRules"]["sch_no"])
+    return bool(pattern.match(sch_no))
+
+
 # TODO - rejection of login+register
 @app.route("/otp/send", methods=["POST"])
 def sendOTP():
-    data = request.data.decode("utf-8")
-    data = json.loads(data)
-    # TODO - verify if the sch no is valid or not
+    rawdata = request.data.decode("utf-8")
+    data: dict = json.loads(rawdata)
     sch_no = data["sch_no"]
+    if not isValidSch(sch_no):
+        return Response(status=429)
 
     try:
         phone_number = getNOFromUser(int(sch_no))
     except:
-        name = data["stud_name"]
-        phone_number = data["phone_no"]
+        name = data.get("stud_name")
+        phone_number = data.get("phone_no")
+        if name is None or phone_number is None:
+            return Response(status=400)
         with mydb_pool.get_connection() as mydb:
             cur = mydb.cursor()
             cur.execute("INSERT INTO tidy_track.userbase (name, schno, phone) VALUES (%s,%s,%s)",
@@ -380,7 +400,7 @@ def sendOTP():
     url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
 
     if DEBUG:
-        return Response(f"{phone_number}",status=200)
+        return Response(f"{phone_number}", status=200)
 
     response = requests.post(url, headers={
         "Authorization": f"Bearer {config['auth']}",
@@ -398,7 +418,7 @@ def sendOTP():
             "Value": otp
         }]
     }))
-    return Response(f"{phone_number}",status=response.status_code)
+    return Response(f"{phone_number}", status=response.status_code)
 
 
 @app.route("/otp/verify", methods=["POST"])

@@ -55,6 +55,9 @@
                 <button id="prev">PREV</button>
                 <button id="next">NEXT</button>
             </div>
+            <div class="grid">
+                <button id="reload">RELOAD</button>
+            </div>
         </article>
     </main>
     <script>
@@ -92,6 +95,11 @@
         $("#next").click(()=>{
             page=page+1;
             updateTable(page);
+        })
+        $("#reload").click(()=>{
+            fetch("/reload",{
+                method:"POST"
+            })
         })
 
         function loadPage(){
