@@ -1,4 +1,3 @@
-import ast
 import base64
 import io
 import json
@@ -9,16 +8,16 @@ import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-import pytz
 
 import matplotlib
 import matplotlib.pylab as plt
 import mysql.connector
 import numpy as np
+import pytz
 import requests
+import schedule
 from PIL import Image
 from flask import Flask, request, send_file, render_template, Response, make_response, redirect
-import schedule
 
 DEBUG = True
 
@@ -70,6 +69,7 @@ class HandleOTP:
             "firstTime": self.firstTime,
             "deleteTime": self.deleteTime,
             "nextSendTime": self.nextSendTime})
+        return to_return
 
 
 handleOTPobj: dict[str, HandleOTP] = {}
@@ -444,11 +444,10 @@ def sendOTP():
 def verifyOTP():
     data = request.data.decode("utf-8")
     data = json.loads(data)
-    debug = data["debug"]
 
     global handleOTPobj
 
-    if debug == "true" and DEBUG:
+    if DEBUG:
         handleOTPobj.get(data["sch_no"]).otp = 111111
     if int(data["otp"]) == handleOTPobj.get(data["sch_no"]).otp:
         token = genToken()
