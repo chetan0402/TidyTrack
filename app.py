@@ -269,7 +269,19 @@ def download():
     return send_file(config["latestAppLocalPath"], mimetype="file/apk")
 
 
-# TODO - serving privacy and TNC website
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
+
+
+@app.route('/privacy')
+def privacy():
+    return render_template("privacy.html")
+
+
+@app.route('/contact')
+def contact():
+    return render_template("contact.html")
 
 
 @app.route("/reload", methods=["POST"])
@@ -373,14 +385,13 @@ def isValidSch(sch_no) -> bool:
     return bool(pattern.match(sch_no))
 
 
-# TODO - rejection of login+register
 @app.route("/otp/send", methods=["POST"])
 def sendOTP():
     rawdata = request.data.decode("utf-8")
     data: dict = json.loads(rawdata)
     sch_no = data["sch_no"]
     if not isValidSch(sch_no):
-        return Response(status=429)
+        return Response(status=400)
 
     try:
         phone_number = getNOFromUser(int(sch_no))
