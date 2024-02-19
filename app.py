@@ -19,7 +19,7 @@ import schedule
 from PIL import Image
 from flask import Flask, request, send_file, render_template, Response, make_response, redirect
 
-DEBUG = True
+DEBUG = False
 
 with open("config.json", "r") as file:
     config = json.load(file)
