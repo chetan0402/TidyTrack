@@ -107,6 +107,7 @@ schedule.every().day.at("00:00", pytz.timezone("Asia/Kolkata")).do(resetSubmit)
 schedule.every().minute.do(resetOTP)
 
 
+# TODO - make request reject duplicate request
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == "GET":
@@ -140,7 +141,18 @@ def index():
             int(time.time()), sch_no))
         mydb.commit()
         cur.close()
-        Image.open(io.BytesIO(base64.b64decode(data["img"].replace("\\n", "").replace("\\", "")))).save(img_path)
+        img = Image.open(io.BytesIO(base64.b64decode(data["img"].replace("\\n", "").replace("\\", ""))))
+        img_buffer = io.BytesIO()
+        quality = 90
+        while True:
+            img.save(img_buffer, format="PNG", quality=quality)
+            if img_buffer.tell() <= config["targetMbSize"] * 1024 * 1024:
+                break
+            quality -= 5
+            img_buffer.seek(0)
+            img_buffer.truncate()
+
+        img.save(img_path, format="PNG",quality=quality)
     return Response(status=200)
 
 
