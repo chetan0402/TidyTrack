@@ -231,6 +231,7 @@ def create_chart():
     return send_file(buf, mimetype="image/png")
 
 
+# TODO - redirect to panel if already logged in
 @app.route("/admin/login")
 def adminLoginPageServe():
     return render_template("adminlogin.html")
