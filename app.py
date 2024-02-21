@@ -336,7 +336,7 @@ def getIMG(path):
     if not verifyToken(request.cookies["Auth"]):
         return Response(status=403)
 
-    return send_file(os.getcwd() + "\\img\\" + path, mimetype="image/png")
+    return send_file(os.getcwd() + "/img/" + path, mimetype="image/png")
 
 
 def verifyToken(token) -> bool:
