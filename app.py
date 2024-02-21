@@ -143,7 +143,7 @@ def index():
         cur.close()
         img = Image.open(io.BytesIO(base64.b64decode(data["img"].replace("\\n", "").replace("\\", ""))))
         img_buffer = io.BytesIO()
-        quality = 90
+        quality = 100
         while True:
             img.save(img_buffer, format="PNG", quality=quality)
             if img_buffer.tell() <= config["targetMbSize"] * 1024 * 1024:
