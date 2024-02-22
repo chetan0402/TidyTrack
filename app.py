@@ -279,7 +279,7 @@ def getLocations():
 
 @app.route('/download')
 def download():
-    return send_file(config["latestAppLocalPath"], mimetype="file/apk")
+    return send_file(config["latestAppLocalPath"], mimetype="application/vnd.android.package-archive")
 
 
 @app.route("/terms")
