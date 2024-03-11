@@ -279,22 +279,22 @@ def getLocations():
 
 @app.route('/download')
 def download():
-    return redirect(config["rootWeb"]+"app-release.apk")
+    return send_file(config["latestAppLocalPath"], mimetype="application/vnd.android.package-archive")
 
 
 @app.route("/terms")
 def terms():
-    return redirect(config["rootWeb"]+"terms.html")
+    return render_template("terms.html")
 
 
 @app.route('/privacy')
 def privacy():
-    return redirect(config["rootWeb"]+"privacy.html")
+    return render_template("privacy.html")
 
 
 @app.route('/contact')
 def contact():
-    return redirect(config["rootWeb"]+"contact.html")
+    return render_template("contact.html")
 
 
 @app.route("/reload", methods=["POST"])
@@ -472,7 +472,7 @@ def verifyOTP():
 @app.route("/update", methods=["POST"])
 def updateJson():
     version = request.args.get("version")
-    if version != requests.get(config["rootWeb"]+"version.txt").text:
+    if version != config["currentVersion"]:
         return Response(status=200)
     else:
         return Response(status=100)
