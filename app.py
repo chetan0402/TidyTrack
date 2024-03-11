@@ -111,7 +111,7 @@ schedule.every().minute.do(resetOTP)
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == "GET":
-        return redirect(config["rootWeb"])
+        return render_template("index.html")
 
     global rateLimitSubmit
 
