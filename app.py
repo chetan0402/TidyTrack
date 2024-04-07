@@ -224,9 +224,10 @@ def create_chart():
     plt.bar(x_axis + 0.15, dirty, width=0.1, label="Very Dirty")
     plt.xticks(x_axis, dates, rotation=45)
     plt.legend()
+    plt.tight_layout()
 
     buf = io.BytesIO()
-    plt.savefig(buf, format="png")
+    plt.savefig(buf, format="png", bbox_inches="tight")
     buf.seek(0)
     return send_file(buf, mimetype="image/png")
 
