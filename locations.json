@@ -18,5 +18,27 @@
     "F2-2 Near 216":"H10DF22",
     "F3-1 Near 308":"H10DF31",
     "F3-2 Near 316":"H10DF32"
+  },
+  "Guest House 10C": {
+    "Room 001": "H10CGHG1",
+    "Room 002": "H10CGHG2",
+    "Room 003": "H10CGHG3",
+    "Room 101": "H10CGHF11",
+    "Room 102": "H10CGHF13",
+    "Room 103": "H10CGHF13",
+    "Room 201": "H10CGHF21",
+    "Room 202": "H10CGHF22",
+    "Room 203": "H10CGHF23"
+  },
+  "Guest House 10D": {
+    "Room 001": "H10DGHG1",
+    "Room 002": "H10DGHG2",
+    "Room 003": "H10DGHG3",
+    "Room 101": "H10DGHF11",
+    "Room 102": "H10DGHF13",
+    "Room 103": "H10DGHF13",
+    "Room 201": "H10DGHF21",
+    "Room 202": "H10DGHF22",
+    "Room 203": "H10DGHF23"
   }
 }
