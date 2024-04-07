@@ -235,6 +235,12 @@ def create_chart():
 # TODO - redirect to panel if already logged in
 @app.route("/admin/login")
 def adminLoginPageServe():
+    try:
+        if verifyToken(request.cookies["Auth"]):
+            return redirect("/admin")
+    except KeyError:
+        pass
+
     return render_template("adminlogin.html")
 
 
@@ -267,7 +273,7 @@ def adminLogin():
 def admin():
     try:
         if not verifyToken(request.cookies["Auth"]):
-            return Response(status=403)
+            return Response(status=401)
         return render_template("admin.html")
     except KeyError:
         return Response(status=400)
