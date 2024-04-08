@@ -40,5 +40,45 @@
     "Room 201": "H10DGHF21",
     "Room 202": "H10DGHF22",
     "Room 203": "H10DGHF23"
+  },
+  "NTB Block A": {
+    "G-1 Near TA102 (STAFF) Male": "NTA102M",
+    "G-1 Near TA102 (STAFF) Female": "NTA102F",
+    "G-2 Near TA111 Male": "NTA111M",
+    "G-2 Near TA111 Female": "NTA111F",
+    "G-3 Near TA112 Male": "NTA112M",
+    "G-3 Near TA112 Female": "NTA112F",
+    "F1-1 Near TA202 Male": "NTA202M",
+    "F1-1 Near TA202 Female": "NTA202F",
+    "F1-2 Near TA211 Male": "NTA211M",
+    "F1-2 Near TA211 Female": "NTA211F",
+    "F1-3 Near TA212 Male": "NTA212M",
+    "F1-3 Near TA212 Female": "NTA212F"
+  },
+  "NTB Block B": {
+    "G-1 Near TB102 (STAFF) Male": "NTB102M",
+    "G-1 Near TB102 (STAFF) Female": "NTB102F",
+    "G-2 Near TB111 Male": "NTB111M",
+    "G-2 Near TB111 Female": "NTB111F",
+    "G-3 Near TB112 Male": "NTB112M",
+    "G-3 Near TB112 Female": "NTB112F",
+    "F1-1 Near TB202 Male": "NTB202M",
+    "F1-1 Near TB202 Female": "NTB202F",
+    "F1-2 Near TB211 Male": "NTB211M",
+    "F1-2 Near TB211 Female": "NTB211F",
+    "F1-3 Near TB212 Male": "NTB212M",
+    "F1-3 Near TB212 Female": "NTB212F"
+  },
+  "NTB Block C": {
+    "G-1 Near TC102 Male": "NTC102M",
+    "G-1 Near TC102 Female": "NTC102F",
+    "F1-1 Near TC202 Male": "NTC202M",
+    "F1-1 Near TC202 Female": "NTC202F"
+  },
+  "NTB Block D": {
+    "G-1 Near TD102 Male": "NTD102M",
+    "G-1 Near TD102 Female": "NTD102F",
+    "F1-1 Near TD202 Male": "NTD202M",
+    "F1-1 Near TD202 Female": "NTD202F"
   }
 }
