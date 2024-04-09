@@ -320,11 +320,18 @@ def getTable():
 
     from_date = request.args.get("fromDate")
     to_date = request.args.get("toDate")
+    washroom_code = request.args.get("washroomCode")
 
     with mydb_pool.get_connection() as mydb:
         cur = mydb.cursor()
-        cur.execute("SELECT * FROM tidy_track.main WHERE time BETWEEN %s AND %s ORDER BY time;",
-                    (from_date, to_date))
+        if washroom_code is None:
+            cur.execute("""
+                                    SELECT * FROM main WHERE (time BETWEEN %s AND %s);
+                                    """, (from_date, to_date))
+        else:
+            cur.execute("""
+                        SELECT * FROM main WHERE (locationcode=%s) and (time BETWEEN %s AND %s);
+                        """, (washroom_code, from_date, to_date))
         results = cur.fetchall()
         cur.close()
 
