@@ -6,22 +6,68 @@
   },
   "servers": [
     {
-      "url": "https://tt.manit.ac.in"
+      "url": "http://tt.manit.ac.in"
     }
   ],
   "paths": {
     "/": {
-      "parameters": [
-        {
-          "name": "token",
-          "in": "path"
+      "get":{
+        "description": "Main landing page",
+        "responses": {
+          "200":{
+            "description":"Landing page is served"
+          }
         }
-      ],
+      },
       "post": {
         "description": "Submitting the form data",
+        "requestBody": {
+          "required":true,
+          "content":{
+            "application/json": {
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "token":{
+                    "type":"string",
+                    "description":"Auth token"
+                  },
+                  "name":{
+                    "type":"string",
+                    "description":"Feedback",
+                    "default":""
+                  },
+                  "rad":{
+                    "type":"integer",
+                    "description":"radio button",
+                    "default":0
+                  },
+                  "washroom":{
+                    "type":"string",
+                    "description":"location code",
+                    "example":"H10CG1"
+                  },
+                  "img":{
+                    "type":"string",
+                    "description":"base64 encoded image"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The response was submited"
+          },
+          "403":{
+            "description": "Authentication Failed"
+          },
+          "429":{
+            "description": "Rate limit hit"
+          },
+          "500":{
+            "description": "internal server error"
           }
         }
       }

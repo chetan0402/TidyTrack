@@ -18,8 +18,11 @@ import requests
 import schedule
 from PIL import Image
 from flask import Flask, request, send_file, render_template, Response, make_response, redirect
+from flask_swagger_ui import get_swaggerui_blueprint
 
 DEBUG = False
+SWAGGER_URL = '/api/docs'
+API_URL = "/swagger"
 
 with open("config.json", "r") as file:
     config = json.load(file)
@@ -29,6 +32,15 @@ matplotlib.use('Agg')
 mydb_pool = mysql.connector.pooling.MySQLConnectionPool(pool_name="pool", pool_size=25, host="10.3.1.19",
                                                         username=config["dbuser"],
                                                         password=config["dbpswd"], database="tidy_track")
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Sample API"
+    }
+)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 class HandleOTP:
@@ -152,7 +164,7 @@ def index():
             img_buffer.seek(0)
             img_buffer.truncate()
 
-        img.save(img_path, format="PNG",quality=quality)
+        img.save(img_path, format="PNG", quality=quality)
     return Response(status=200)
 
 
@@ -489,6 +501,11 @@ def updateJson():
         return Response(status=200)
     else:
         return Response(status=100)
+
+
+@app.route(API_URL, methods=['GET'])
+def serverAPI():
+    return send_file("documentation.json")
 
 
 if __name__ == "__main__":
