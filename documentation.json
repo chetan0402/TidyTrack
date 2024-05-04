@@ -71,6 +71,95 @@
           }
         }
       }
+    },
+    "/chart":{
+      "post":{
+        "description":"Chart API point",
+        "parameters":[
+          {
+            "name":"Auth",
+            "in":"cookie",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          },
+          {
+            "name":"fromDate",
+            "in":"query",
+            "required":true,
+            "description":"unix timestamp value",
+            "schema":{
+              "type":"integer"
+            }
+          },
+          {
+            "name":"toDate",
+            "in":"query",
+            "required":true,
+            "description":"unix timestamp value",
+            "schema":{
+              "type":"integer"
+            }
+          },
+          {
+            "name":"washroomCode",
+            "in":"query",
+            "required":false,
+            "description":"location code",
+            "schema":{
+              "type":"string"
+            }
+          }
+        ],
+        "responses": {
+          "200":{
+            "description":"PNG returned"
+          },
+          "400":{
+            "description":"Required parameter not present"
+          },
+          "403":{
+            "description":"Authenticaiton Failed"
+          },
+          "500":{
+            "description":"Internal server error"
+          }
+        }
+      }
+    },
+    "/admin/verify":{
+      "post":{
+        "description":"Get token for admin",
+        "requestBody":{
+          "content":{
+            "application/x-www-form-urlencoded": {
+              "schema":{
+                "type":"object",
+                "properties":{
+                  "user":{
+                    "type":"string"
+                  },
+                  "pswd":{
+                    "type":"string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "200":{
+            "description":"token returned as cookie"
+          },
+          "401":{
+            "description": "wrong userpass"
+          },
+          "500":{
+            "description":"internal server error"
+          }
+        }
+      }
     }
   }
 }
