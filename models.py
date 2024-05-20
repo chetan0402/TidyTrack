@@ -40,3 +40,15 @@ class OTP(Base):
     firstTime = Column(Integer)
     deleteTime = Column(Integer)
     nextSendTime = Column(Integer)
+
+
+class InternetComplain(Base):
+    __tablename__ = "internet"
+
+    ticket_id = Column(String, primary_key=True)
+    location = Column(String)
+    selected = Column(Integer)
+    other = Column(String)
+    img = Column(String)
+    time = Column(Integer)
+    user = Column(String)

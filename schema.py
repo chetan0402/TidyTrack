@@ -41,6 +41,7 @@ class UserbaseModel(BaseModel):
 
 class OTPRequest(BaseModel):
     id: str
+    phone: int
 
     class Config:
         from_attributes = True
@@ -59,6 +60,18 @@ class SignupRequest(BaseModel):
     id: str
     name: str
     phone: int
+
+    class Config:
+        from_attributes = True
+
+
+class InternetReport(BaseModel):
+    id: str
+    token: str
+    location: str
+    selected: int
+    other: str
+    img: str
 
     class Config:
         from_attributes = True
