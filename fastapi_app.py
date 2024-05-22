@@ -15,7 +15,6 @@ from PIL import Image
 from fastapi import FastAPI, Depends, Response, status, HTTPException, Header, Request
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from typing import Annotated
 
 import global_config
 import models
@@ -275,7 +274,7 @@ def version():
 
 
 @app.post("/reload/code")
-def reloadCode(request: Request, x_hub_signature_256: Annotated[str, Header()]):
+def reloadCode(request: Request, x_hub_signature_256: str = Header(default='')):
     print(x_hub_signature_256)
     print(request.json())
     body = str(request.json()).encode("utf-8")
