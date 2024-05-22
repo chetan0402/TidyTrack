@@ -113,14 +113,20 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(clean_
     return {"ticket_id": internet_report.id}
 
 
-@app.post("/otp/send")
+@app.post("/otp/send", response_model=Message, responses={
+    400: {
+        "model": Message
+    }
+})
 def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(get_db)):
     if not isValidId(otp_request.id):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid ID")
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return Message(message="Invalid ID")
     user = getUserFromID(db, otp_request.id)
     if user is not None:
         if user.usergroup != otp_request.role:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Role")
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return Message(message="Invalid Role")
 
     otpElement = db.query(models.OTP).filter(models.OTP.id == otp_request.id).first()
     if otpElement is None:
@@ -164,8 +170,7 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
     }))
 
     response.status_code = responseBSNL.status_code
-
-    return otp_request.phone
+    return Message(message=otp_request.phone)
 
 
 @app.post("/login/verify")
