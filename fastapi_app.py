@@ -253,7 +253,7 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
             user.idtokens = token
         db.commit()
         db.refresh(user)
-        return token
+        return Message(message=token)
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return Message(message="Wrong OTP")
@@ -276,4 +276,4 @@ def version():
 
 @app.post("/reload/code")
 async def reloadCode():
-    subprocess.run(["git","pull"])
+    subprocess.run(["git", "pull"])
