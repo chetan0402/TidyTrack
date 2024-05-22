@@ -274,10 +274,10 @@ def version():
 
 
 @app.post("/reload/code")
-def reloadCode(request: Request, x_hub_signature_256: str = Header(default='')):
+async def reloadCode(request: Request, x_hub_signature_256: str = Header(default='')):
     print(x_hub_signature_256)
-    print(request.json())
-    body = str(request.json()).encode("utf-8")
+    print(await request.json())
+    body = str(await request.json()).encode("utf-8")
     if not x_hub_signature_256:
         raise HTTPException(status_code=403, detail="x-hub-signature-256 header is missing!")
     hash_object = hmac.new(WEBHOOK.encode('utf-8'), msg=body, digestmod=hashlib.sha256)
