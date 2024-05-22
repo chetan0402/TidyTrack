@@ -1,5 +1,7 @@
 import asyncio
 import base64
+import hashlib
+import hmac
 import io
 import json
 import random
@@ -276,4 +278,11 @@ def version():
 def reloadCode(request: Request, x_hub_signature_256: Annotated[str, Header()]):
     print(x_hub_signature_256)
     print(request.json())
-
+    body = str(request.json()).encode("utf-8")
+    if not x_hub_signature_256:
+        raise HTTPException(status_code=403, detail="x-hub-signature-256 header is missing!")
+    hash_object = hmac.new(WEBHOOK.encode('utf-8'), msg=body, digestmod=hashlib.sha256)
+    expected_signature = "sha256=" + hash_object.hexdigest()
+    if not hmac.compare_digest(expected_signature, x_hub_signature_256):
+        raise HTTPException(status_code=403, detail="Request signatures didn't match!")
+    print("Done")
