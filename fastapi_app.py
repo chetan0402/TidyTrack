@@ -10,9 +10,10 @@ from pathlib import Path
 
 import requests
 from PIL import Image
-from fastapi import FastAPI, Depends, Response, status, HTTPException
+from fastapi import FastAPI, Depends, Response, status, HTTPException, Header, Request
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
+from typing import Annotated
 
 import global_config
 import models
@@ -117,7 +118,7 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(clean_
     400: {
         "model": Message
     },
-    429:{
+    429: {
         "model": Message
     }
 })
@@ -145,7 +146,7 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
         db.add(otpElement)
     else:
         if int(time.time()) < otpElement.nextSendTime:
-            response.status_code=status.HTTP_429_TOO_MANY_REQUESTS
+            response.status_code = status.HTTP_429_TOO_MANY_REQUESTS
             return Message(message="Wait for a few seconds. Try again later")
         otpElement.tries += 1
         otpElement.nextSendTime = int(time.time()) + (2 * 60)
@@ -219,13 +220,13 @@ def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db
         return Message(message="Wrong OTP")
 
 
-@app.post("/signup/verify",response_model=Message,
+@app.post("/signup/verify", response_model=Message,
           responses={
-              401:{
-                  "model":Message
+              401: {
+                  "model": Message
               }
           })
-def signup(signup_request: SignupRequest, response:Response,db: Session = Depends(get_db)):
+def signup(signup_request: SignupRequest, response: Response, db: Session = Depends(get_db)):
     otp_element: models.OTP = db.query(models.OTP).filter(models.OTP.id == signup_request.id).first()
     if signup_request.otp == otp_element.otp:
         userbase_element = models.Userbase(
@@ -252,7 +253,7 @@ def signup(signup_request: SignupRequest, response:Response,db: Session = Depend
         db.refresh(user)
         return token
     else:
-        response.status_code=status.HTTP_401_UNAUTHORIZED
+        response.status_code = status.HTTP_401_UNAUTHORIZED
         return Message(message="Wrong OTP")
 
 
@@ -269,3 +270,9 @@ def download():
 @app.get("/version")
 def version():
     return FileResponse(VERSION_FILE)
+
+
+@app.post("/reload/code")
+def reloadCode(request: Request, x_hub_signature_256: Annotated[str | None, Header()]):
+    print(x_hub_signature_256)
+    print(request.json())
