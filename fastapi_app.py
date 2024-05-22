@@ -216,7 +216,7 @@ def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db
         db.query(models.OTP).filter(models.OTP.id == login_verify_request.id).delete()
         db.commit()
         db.refresh(user)
-        return token
+        return Message(message=token)
     else:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return Message(message="Wrong OTP")
