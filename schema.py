@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Union
 
 
 class AdminModel(BaseModel):
@@ -41,7 +40,7 @@ class UserbaseModel(BaseModel):
 
 
 class OTPRequest(BaseModel):
-    id: Union[str, None]
+    id: str | None = None
     role: int
     phone: int
 

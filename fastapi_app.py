@@ -8,15 +8,13 @@ import secrets
 import subprocess
 import time
 from pathlib import Path
-from typing import Annotated
 
 import requests
 from PIL import Image
-from fastapi import FastAPI, Depends, Response, status, HTTPException, Query
+from fastapi import FastAPI, Depends, Response, status, HTTPException
 from fastapi.responses import FileResponse
 
 import global_config
-import models
 from CRUD import *
 from database import SessionLocal
 from global_config import *
@@ -203,17 +201,19 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
         "model": Message
     },
     401: {
-        "description": "Wrong otp",
+        "description": "Wrong OTP",
         "model": Message
     }
 })
 def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db: Session = Depends(get_db)):
     userbase = getUserFromPhone(db, login_verify_request.phone)
     if userbase is None:
+        # 400
         response.status_code = status.HTTP_400_BAD_REQUEST
         return Message(message="Account does not exist")
     else:
         if userbase.usergroup != login_verify_request.role:
+            # 400
             response.status_code = status.HTTP_400_BAD_REQUEST
             return Message(message="Selected Role - Registered Role mismatch")
 
@@ -235,8 +235,10 @@ def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db
         db.query(models.OTP).filter(models.OTP.id == userbase.id).delete()
         db.commit()
         db.refresh(user)
+        # 200
         return Message(message=token)
     else:
+        # 401
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return Message(message="Wrong OTP")
 
@@ -293,6 +295,6 @@ def version():
     return FileResponse(VERSION_FILE)
 
 
-@app.post("/reload/code")
+@app.post("/reload/code",include_in_schema=False)
 async def reloadCode():
     subprocess.run(["git", "pull"])
