@@ -273,15 +273,24 @@ def version():
     return FileResponse(VERSION_FILE)
 
 
+def verify_signature(payload, signature):
+    mac = hmac.new(WEBHOOK.encode(), msg=payload, digestmod=hashlib.sha256)
+    return hmac.compare_digest('sha256=' + mac.hexdigest(), signature)
+
+
 @app.post("/reload/code")
-async def reloadCode(request: Request, x_hub_signature_256: str = Header(default='')):
-    print(x_hub_signature_256)
-    print(await request.json())
-    body = str(await request.json()).encode("utf-8")
-    if not x_hub_signature_256:
-        raise HTTPException(status_code=403, detail="x-hub-signature-256 header is missing!")
-    hash_object = hmac.new(WEBHOOK.encode('utf-8'), msg=body, digestmod=hashlib.sha256)
-    expected_signature = "sha256=" + hash_object.hexdigest()
-    if not hmac.compare_digest(expected_signature, x_hub_signature_256):
-        raise HTTPException(status_code=403, detail="Request signatures didn't match!")
-    print("Done")
+async def reloadCode(request: Request):
+    try:
+        body = await request.body()
+        headers = request.headers
+        signature = headers.get('X-Hub-Signature-256')
+
+        if not signature or not verify_signature(body, signature):
+            raise HTTPException(status_code=400, detail="Invalid signature")
+
+        payload = await request.json()
+        print(json.dumps(payload, indent=2))
+
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error processing webhook: {str(e)}")
