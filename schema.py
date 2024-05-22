@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class AdminModel(BaseModel):
@@ -40,7 +41,7 @@ class UserbaseModel(BaseModel):
 
 
 class OTPRequest(BaseModel):
-    id: str | None = None
+    id: Optional[str] = None
     role: int
     phone: int
 
