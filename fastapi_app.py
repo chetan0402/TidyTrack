@@ -19,6 +19,7 @@ import models
 from database import SessionLocal
 from global_config import *
 from schema import *
+from CRUD import *
 
 
 def get_db():
@@ -116,11 +117,16 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(clean_
 def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(get_db)):
     if not isValidId(otp_request.id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid ID")
+    user = getUserFromID(db, otp_request.id)
+    if user is not None:
+        if user.usergroup != otp_request.role:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Role")
 
     otpElement = db.query(models.OTP).filter(models.OTP.id == otp_request.id).first()
     if otpElement is None:
         otpElement = models.OTP(
             id=otp_request.id,
+            role=otp_request.role,
             tries=1,
             otp=random.randint(100000, 999999),
             firstTime=int(time.time()),
@@ -164,8 +170,12 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
 
 @app.post("/login/verify")
 def verifyLogin(login_verify_request: LoginVerifyRequest, db: Session = Depends(get_db)):
-    if db.query(models.Userbase).filter(models.Userbase.id == login_verify_request.user_id).first() is None:
+    userbase = getUserFromID(db, login_verify_request.id)
+    if userbase is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Signup first.")
+    else:
+        if userbase.usergroup != login_verify_request.role:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Role")
     otp_element: models.OTP = db.query(models.OTP).filter(models.OTP.id == login_verify_request.id).first()
     if login_verify_request.otp == otp_element.otp:
         token = secrets.token_hex(32)

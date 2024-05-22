@@ -41,6 +41,7 @@ class UserbaseModel(BaseModel):
 
 class OTPRequest(BaseModel):
     id: str
+    role: int
     phone: int
 
     class Config:
@@ -51,6 +52,7 @@ class LoginVerifyRequest(BaseModel):
     id: str
     otp: int
     name: str
+    role: int
 
     class Config:
         from_attributes = True

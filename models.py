@@ -35,6 +35,7 @@ class OTP(Base):
     __tablename__ = "otp"
 
     id = Column(String, primary_key=True)
+    role = Column(Integer)
     tries = Column(Integer)
     otp = Column(Integer)
     firstTime = Column(Integer)
