@@ -170,7 +170,7 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
     }))
 
     response.status_code = responseBSNL.status_code
-    return Message(message=otp_request.phone)
+    return Message(message=str(otp_request.phone))
 
 
 @app.post("/login/verify")
