@@ -116,6 +116,9 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(clean_
 @app.post("/otp/send", response_model=Message, responses={
     400: {
         "model": Message
+    },
+    429:{
+        "model": Message
     }
 })
 def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(get_db)):
@@ -142,11 +145,13 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
         db.add(otpElement)
     else:
         if int(time.time()) < otpElement.nextSendTime:
-            raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS)
+            response.status_code=status.HTTP_429_TOO_MANY_REQUESTS
+            return Message(message="Wait for a few seconds. Try again later")
         otpElement.tries += 1
         otpElement.nextSendTime = int(time.time()) + (2 * 60)
         if otpElement.tries == 4:
-            raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS)
+            response.status_code = status.HTTP_429_TOO_MANY_REQUESTS
+            return Message(message="Too many requests. Please try again in an hour")
     db.commit()
     db.refresh(otpElement)
 
@@ -173,14 +178,23 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
     return Message(message=str(otp_request.phone))
 
 
-@app.post("/login/verify")
-def verifyLogin(login_verify_request: LoginVerifyRequest, db: Session = Depends(get_db)):
+@app.post("/login/verify", response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    401: {
+        "model": Message
+    }
+})
+def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db: Session = Depends(get_db)):
     userbase = getUserFromID(db, login_verify_request.id)
     if userbase is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Signup first.")
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return Message(message="Signup first")
     else:
         if userbase.usergroup != login_verify_request.role:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Role")
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return Message(message="Invalid Role")
     otp_element: models.OTP = db.query(models.OTP).filter(models.OTP.id == login_verify_request.id).first()
     if login_verify_request.otp == otp_element.otp:
         token = secrets.token_hex(32)
@@ -201,11 +215,17 @@ def verifyLogin(login_verify_request: LoginVerifyRequest, db: Session = Depends(
         db.refresh(user)
         return token
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return Message(message="Wrong OTP")
 
 
-@app.post("/signup/verify")
-def signup(signup_request: SignupRequest, db: Session = Depends(get_db)):
+@app.post("/signup/verify",response_model=Message,
+          responses={
+              401:{
+                  "model":Message
+              }
+          })
+def signup(signup_request: SignupRequest, response:Response,db: Session = Depends(get_db)):
     otp_element: models.OTP = db.query(models.OTP).filter(models.OTP.id == signup_request.id).first()
     if signup_request.otp == otp_element.otp:
         userbase_element = models.Userbase(
@@ -232,7 +252,8 @@ def signup(signup_request: SignupRequest, db: Session = Depends(get_db)):
         db.refresh(user)
         return token
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        response.status_code=status.HTTP_401_UNAUTHORIZED
+        return Message(message="Wrong OTP")
 
 
 @app.get("/get/locations")
