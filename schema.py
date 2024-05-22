@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Union
 
 
 class AdminModel(BaseModel):
@@ -40,7 +41,7 @@ class UserbaseModel(BaseModel):
 
 
 class OTPRequest(BaseModel):
-    id: str
+    id: Union[str, None]
     role: int
     phone: int
 
@@ -49,9 +50,8 @@ class OTPRequest(BaseModel):
 
 
 class LoginVerifyRequest(BaseModel):
-    id: str
+    phone: int
     otp: int
-    name: str
     role: int
 
     class Config:

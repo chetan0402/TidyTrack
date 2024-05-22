@@ -1,28 +1,26 @@
 import asyncio
 import base64
-import hashlib
-import hmac
 import io
 import json
 import random
-import secrets
-import time
 import re
-from pathlib import Path
+import secrets
 import subprocess
+import time
+from pathlib import Path
+from typing import Annotated
 
 import requests
 from PIL import Image
-from fastapi import FastAPI, Depends, Response, status, HTTPException, Header, Request
+from fastapi import FastAPI, Depends, Response, status, HTTPException, Query
 from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
 
 import global_config
 import models
+from CRUD import *
 from database import SessionLocal
 from global_config import *
 from schema import *
-from CRUD import *
 
 
 def get_db():
@@ -85,7 +83,7 @@ def homePage():
 
 
 @app.post("/internet/report")
-def internetReport(internet_report: InternetReport, db: Session = Depends(clean_otp)):
+def internetReport(internet_report: InternetReport, db: Session = Depends(get_db)):
     if not validUUID(internet_report.id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid UUID")
 
@@ -125,14 +123,33 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(clean_
     }
 })
 def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(get_db)):
-    if not isValidId(otp_request.id):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return Message(message="Invalid ID")
-    user = getUserFromID(db, otp_request.id)
-    if user is not None:
+    # If there is no id in the request, it means that the request must be a login request
+    if otp_request.id is None:
+        # Login workflow
+        # Verify if the user exists
+        user = getUserFromPhone(db, otp_request.phone)
+        if user is None:
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return Message(message="Signup First")
+
+        # Verify the role
         if user.usergroup != otp_request.role:
             response.status_code = status.HTTP_400_BAD_REQUEST
             return Message(message="Invalid Role")
+
+        otp_request.id = user.id
+    else:
+        # Signup Workflow
+        # verify if the ID is allowed to register
+        if not isValidId(otp_request.id):
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return Message(message="Invalid ID")
+
+        # Check if the user already exists in the userbase and reject if it does
+        user = getUserFromID(db, otp_request.id)
+        if user is not None:
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return Message(message="Account already exists. Please login instead")
 
     otpElement = db.query(models.OTP).filter(models.OTP.id == otp_request.id).first()
     if otpElement is None:
@@ -186,34 +203,36 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
         "model": Message
     },
     401: {
+        "description": "Wrong otp",
         "model": Message
     }
 })
 def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db: Session = Depends(get_db)):
-    userbase = getUserFromID(db, login_verify_request.id)
+    userbase = getUserFromPhone(db, login_verify_request.phone)
     if userbase is None:
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return Message(message="Signup first")
+        return Message(message="Account does not exist")
     else:
         if userbase.usergroup != login_verify_request.role:
             response.status_code = status.HTTP_400_BAD_REQUEST
-            return Message(message="Invalid Role")
-    otp_element: models.OTP = db.query(models.OTP).filter(models.OTP.id == login_verify_request.id).first()
+            return Message(message="Selected Role - Registered Role mismatch")
+
+    otp_element: models.OTP = db.query(models.OTP).filter(models.OTP.id == userbase.id).first()
     if login_verify_request.otp == otp_element.otp:
         token = secrets.token_hex(32)
-        user: models.Tokens = db.query(models.Tokens).filter(models.Tokens.user == login_verify_request.id).first()
+        user: models.Tokens = db.query(models.Tokens).filter(models.Tokens.user == userbase.id).first()
         if user is None:
             user = models.Tokens(
                 idtokens=token,
                 time=int(time.time()) + 31556926,
-                user=login_verify_request.id
+                user=userbase.id
             )
             db.add(user)
         else:
             user.idtokens = token
             user.time = int(time.time()) + 31556926
 
-        db.query(models.OTP).filter(models.OTP.id == login_verify_request.id).delete()
+        db.query(models.OTP).filter(models.OTP.id == userbase.id).delete()
         db.commit()
         db.refresh(user)
         return Message(message=token)

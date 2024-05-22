@@ -6,3 +6,7 @@ import schema
 
 def getUserFromID(db: Session, user_id: str) -> models.Userbase:
     return db.query(models.Userbase).filter(models.Userbase.id == user_id).first()
+
+
+def getUserFromPhone(db: Session, phone: int) -> models.Userbase:
+    return db.query(models.Userbase).filter(models.Userbase.phone == phone).first()
