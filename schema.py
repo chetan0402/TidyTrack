@@ -62,6 +62,7 @@ class SignupRequest(BaseModel):
     id: str
     name: str
     phone: int
+    otp: int
 
     class Config:
         from_attributes = True
