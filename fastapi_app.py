@@ -29,13 +29,9 @@ def get_db():
         db.close()
 
 
-async def clean_otp():
-    while True:
-        db = SessionLocal()
-        db.query(models.OTP).filter(models.OTP.deleteTime < int(time.time())).delete()
-        db.commit()
-        db.close()
-        await asyncio.sleep(1)
+def clean_otp(db: Session):
+    db.query(models.OTP).filter(models.OTP.deleteTime < int(time.time())).delete()
+    db.commit()
 
 
 def clean_string(string) -> str:
@@ -68,11 +64,6 @@ def saveIMG(img_string: str, local_path: str) -> None:
 
 
 app = FastAPI()
-
-
-@app.on_event("startup")
-async def startup():
-    asyncio.create_task(clean_otp())
 
 
 @app.get("/")
@@ -121,6 +112,7 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(get_db
     }
 })
 def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(get_db)):
+    clean_otp(db)
     # If there is no id in the request, it means that the request must be a login request
     if otp_request.id is None:
         # Login workflow
@@ -295,6 +287,6 @@ def version():
     return FileResponse(VERSION_FILE)
 
 
-@app.post("/reload/code",include_in_schema=False)
+@app.post("/update/code",include_in_schema=False)
 async def reloadCode():
     subprocess.run(["git", "pull"])
