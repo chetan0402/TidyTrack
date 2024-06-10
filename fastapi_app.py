@@ -1,4 +1,3 @@
-import asyncio
 import base64
 import io
 import json
@@ -11,14 +10,15 @@ from pathlib import Path
 
 import requests
 from PIL import Image
-from fastapi import FastAPI, Depends, Response, status, HTTPException
+from fastapi import FastAPI, Depends, Response, status
 from fastapi.responses import FileResponse
 
 import global_config
-from CRUD import *
+import models
 from database import SessionLocal
 from global_config import *
 from schema import *
+from utils import *
 
 
 def get_db():
@@ -71,15 +71,24 @@ def homePage():
     return FileResponse("templates/index.html")
 
 
-@app.post("/internet/report")
-def internetReport(internet_report: InternetReport, db: Session = Depends(get_db)):
+@app.post("/internet/report", response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    403: {
+        "model": Message
+    }
+})
+def internetReport(internet_report: InternetReport, response: Response, db: Session = Depends(get_db)):
     if not validUUID(internet_report.id):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid UUID")
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return Message(message="Invalid UUID")
 
-    user: models.Tokens = db.query(models.Tokens).filter(models.Tokens.idtokens == internet_report.token).first()
-    user: models.Userbase = db.query(models.Userbase).filter(models.Userbase.id == user.user).first()
+    user = getUserFromToken(db, internet_report.token)
+
     if user.usergroup != 0:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return Message(message="You are not allowed to report")
 
     # TODO - rate limit number of reports in a day
 
@@ -100,7 +109,34 @@ def internetReport(internet_report: InternetReport, db: Session = Depends(get_db
     db.commit()
     db.refresh(internet_complain)
 
-    return {"ticket_id": internet_report.id}
+    return Message(message=internet_report.id)
+
+
+@app.post("/food/report")
+def foodReport(food_report_request: FoodReportRequest, response: Response, db: Session = Depends(get_db)):
+    if not validUUID(food_report_request.id):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return Message(message="Invalid UUID")
+
+    user = getUserFromToken(db, food_report_request.token)
+
+    if user.usergroup != 0:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return Message(message="You are not allowed to report")
+
+    food_report = models.FoodReport(
+        ticket_id=food_report_request.id,
+        location=food_report_request.location,
+        selected=food_report_request.selected,
+        other=clean_string(food_report_request.other),
+        time=int(time.time()),
+        user=user.id
+    )
+    db.add(food_report)
+    db.commit()
+    db.refresh(food_report)
+
+    return Message(message=food_report_request.id)
 
 
 @app.post("/otp/send", response_model=Message, responses={
@@ -287,6 +323,6 @@ def version():
     return FileResponse(VERSION_FILE)
 
 
-@app.post("/update/code",include_in_schema=False)
+@app.post("/update/code", include_in_schema=False)
 async def reloadCode():
     subprocess.run(["git", "pull"])

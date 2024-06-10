@@ -53,3 +53,14 @@ class InternetComplain(Base):
     img = Column(String)
     time = Column(Integer)
     user = Column(String)
+
+
+class FoodReport(Base):
+    __tablename__ = "food"
+    # TODO - create table
+    ticket_id = Column(String, primary_key=True)
+    location = Column(String)
+    selected = Column(Integer)
+    other = Column(String)
+    time = Column(Integer)
+    user = Column(String)

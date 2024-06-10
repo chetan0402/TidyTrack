@@ -80,6 +80,17 @@ class InternetReport(BaseModel):
         from_attributes = True
 
 
+class FoodReportRequest(BaseModel):
+    id: str
+    token: str
+    location: str
+    selected: int
+    other: str
+
+    class Config:
+        from_attributes = True
+
+
 class Message(BaseModel):
     message: str
 
