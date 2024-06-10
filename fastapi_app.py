@@ -71,7 +71,7 @@ def homePage():
     return FileResponse("templates/index.html")
 
 
-@app.post("/internet/report", response_model=Message, responses={
+@app.post("/internet/report",tags=["report"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -112,7 +112,14 @@ def internetReport(internet_report: InternetReport, response: Response, db: Sess
     return Message(message=internet_report.id)
 
 
-@app.post("/food/report")
+@app.post("/food/report",tags=["report"], response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    403: {
+        "model": Message
+    }
+})
 def foodReport(food_report_request: FoodReportRequest, response: Response, db: Session = Depends(get_db)):
     if not validUUID(food_report_request.id):
         response.status_code = status.HTTP_400_BAD_REQUEST
@@ -139,7 +146,7 @@ def foodReport(food_report_request: FoodReportRequest, response: Response, db: S
     return Message(message=food_report_request.id)
 
 
-@app.post("/otp/send", response_model=Message, responses={
+@app.post("/otp/send",tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -224,7 +231,7 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
     return Message(message=str(otp_request.phone))
 
 
-@app.post("/login/verify", response_model=Message, responses={
+@app.post("/login/verify",tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -271,7 +278,7 @@ def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db
         return Message(message="Wrong OTP")
 
 
-@app.post("/signup/verify", response_model=Message,
+@app.post("/signup/verify",tags=["account"], response_model=Message,
           responses={
               401: {
                   "model": Message
@@ -326,3 +333,4 @@ def version():
 @app.post("/update/code", include_in_schema=False)
 async def reloadCode():
     subprocess.run(["git", "pull"])
+    return Message(message="Updated!")
