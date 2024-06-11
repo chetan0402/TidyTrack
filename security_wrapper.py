@@ -3,6 +3,7 @@ from fastapi import Request, Response
 import re
 from schema import *
 import asyncio
+from functools import wraps
 
 
 def validUUID(string) -> bool:
@@ -10,6 +11,7 @@ def validUUID(string) -> bool:
 
 
 def verifyRequestUUID(func):
+    @wraps(func)
     def wrapper(request: Request,response: Response, *args, **kwargs):
         ticket_id = asyncio.run(request.json())['id']
         if not validUUID(ticket_id):
