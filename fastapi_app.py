@@ -19,6 +19,7 @@ from database import SessionLocal
 from global_config import *
 from schema import *
 from utils import *
+from security_wrapper import *
 
 
 def get_db():
@@ -36,10 +37,6 @@ def clean_otp(db: Session):
 
 def clean_string(string) -> str:
     return re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', '', string)
-
-
-def validUUID(string) -> bool:
-    return re.fullmatch(r'[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}', string).string == string
 
 
 # TODO - implement validation rule
@@ -71,7 +68,7 @@ def homePage():
     return FileResponse("templates/index.html")
 
 
-@app.post("/internet/report",tags=["report"], response_model=Message, responses={
+@app.post("/internet/report", tags=["report"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -112,7 +109,7 @@ def internetReport(internet_report: InternetReport, response: Response, db: Sess
     return Message(message=internet_report.id)
 
 
-@app.post("/food/report",tags=["report"], response_model=Message, responses={
+@app.post("/food/report", tags=["report"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -146,7 +143,7 @@ def foodReport(food_report_request: FoodReportRequest, response: Response, db: S
     return Message(message=food_report_request.id)
 
 
-@app.post("/otp/send",tags=["account"], response_model=Message, responses={
+@app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -231,7 +228,7 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
     return Message(message=str(otp_request.phone))
 
 
-@app.post("/login/verify",tags=["account"], response_model=Message, responses={
+@app.post("/login/verify", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
     },
@@ -278,7 +275,7 @@ def verifyLogin(login_verify_request: LoginVerifyRequest, response: Response, db
         return Message(message="Wrong OTP")
 
 
-@app.post("/signup/verify",tags=["account"], response_model=Message,
+@app.post("/signup/verify", tags=["account"], response_model=Message,
           responses={
               401: {
                   "model": Message
@@ -328,6 +325,12 @@ def download():
 @app.get("/version")
 def version():
     return FileResponse(VERSION_FILE)
+
+
+@app.post("/test")
+@verifyRequestUUID
+def test(test_request: Test, response: Response):
+    return Message(message="successful!")
 
 
 @app.post("/update/code", include_in_schema=False)
