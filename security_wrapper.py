@@ -19,7 +19,7 @@ def verifyRequestUUID(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         request = None
-        for arg in kwargs:
+        for arg in kwargs.values():
             if isinstance(arg, BaseModel):
                 request = arg
         if request is None:
