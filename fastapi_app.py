@@ -1,22 +1,16 @@
-import base64
-import io
 import json
 import random
-import re
 import secrets
 import subprocess
 import time
-from pathlib import Path
 
 import requests
-from PIL import Image
 from fastapi import FastAPI, Depends, Response, status
 from fastapi.responses import FileResponse
 
-import global_config
+import settings.config
 import models
 from database import SessionLocal
-from global_config import *
 from schema import *
 from utils import *
 from security_wrapper import *
@@ -30,11 +24,6 @@ def get_db():
         db.close()
 
 
-def clean_otp(db: Session):
-    db.query(models.OTP).filter(models.OTP.deleteTime < int(time.time())).delete()
-    db.commit()
-
-
 def clean_string(string) -> str:
     return re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', '', string)
 
@@ -44,23 +33,10 @@ def isValidId(id: str) -> bool:
     return True
 
 
-def saveIMG(img_string: str, local_path: str) -> None:
-    img_path = Path.home().joinpath("img").joinpath(local_path)
-    img = Image.open(io.BytesIO(base64.b64decode(img_string.replace("\\n", "").replace("\\", ""))))
-    img_buffer = io.BytesIO()
-    quality = 100
-    while quality > 0:
-        img.save(img_buffer, "PNG", quality=quality)
-        if img_buffer.tell() <= global_config.TARGET_PHOTO_SIZE * 1024 * 1024:
-            break
-        quality -= 5
-        img_buffer.seek(0)
-        img_buffer.truncate()
-
-    img.save(img_path, "PNG", quality=quality)
-
-
 app = FastAPI()
+config = settings.config.get_config()
+if not config.loaded:
+    raise Exception("Config not loaded")
 
 
 @app.get("/")
@@ -76,11 +52,8 @@ def homePage():
         "model": Message
     }
 })
+@verifyRequestUUID
 def internetReport(internet_report: InternetReport, response: Response, db: Session = Depends(get_db)):
-    if not validUUID(internet_report.id):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return Message(message="Invalid UUID")
-
     user = getUserFromToken(db, internet_report.token)
 
     if user.usergroup != 0:
@@ -117,11 +90,8 @@ def internetReport(internet_report: InternetReport, response: Response, db: Sess
         "model": Message
     }
 })
+@verifyRequestUUID
 def foodReport(food_report_request: FoodReportRequest, response: Response, db: Session = Depends(get_db)):
-    if not validUUID(food_report_request.id):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return Message(message="Invalid UUID")
-
     user = getUserFromToken(db, food_report_request.token)
 
     if user.usergroup != 0:
@@ -181,9 +151,9 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
             response.status_code = status.HTTP_400_BAD_REQUEST
             return Message(message="Account already exists. Please login instead")
 
-    otpElement = db.query(models.OTP).filter(models.OTP.id == otp_request.id).first()
-    if otpElement is None:
-        otpElement = models.OTP(
+    otp_element = db.query(models.OTP).filter(models.OTP.id == otp_request.id).first()
+    if otp_element is None:
+        otp_element = models.OTP(
             id=otp_request.id,
             role=otp_request.role,
             tries=1,
@@ -192,23 +162,23 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
             deleteTime=int(time.time()) + (60 * 60),
             nextSendTime=int(time.time()) + (2 * 60)
         )
-        db.add(otpElement)
+        db.add(otp_element)
     else:
-        if int(time.time()) < otpElement.nextSendTime:
+        if int(time.time()) < otp_element.nextSendTime:
             response.status_code = status.HTTP_429_TOO_MANY_REQUESTS
             return Message(message="Wait for a few seconds. Try again later")
-        otpElement.tries += 1
-        otpElement.nextSendTime = int(time.time()) + (2 * 60)
-        if otpElement.tries == 4:
+        otp_element.tries += 1
+        otp_element.nextSendTime = int(time.time()) + (2 * 60)
+        if otp_element.tries == 4:
             response.status_code = status.HTTP_429_TOO_MANY_REQUESTS
             return Message(message="Too many requests. Please try again in an hour")
     db.commit()
-    db.refresh(otpElement)
+    db.refresh(otp_element)
 
     url = "https://bulksms.bsnl.in:5010/api/Send_SMS"
 
-    responseBSNL = requests.post(url, headers={
-        "Authorization": f"Bearer {BSNL_AUTH}",
+    response_bsnl = requests.post(url, headers={
+        "Authorization": f"Bearer {config.BSNL_AUTH}",
         "Content-Type": "application/json;charset=utf-8"
     }, data=json.dumps({
         "Header": "NITBPL",
@@ -216,15 +186,15 @@ def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(g
         "Is_Unicode": "0",
         "Is_Flash": "0",
         "Message_Type": "SI",
-        "Entity_Id": ENTITY_ID,
-        "Content_Template_Id": TEMPLATE_ID,
+        "Entity_Id": config.ENTITY_ID,
+        "Content_Template_Id": config.TEMPLATE_ID,
         "Template_Keys_and_Values": [{
             "Key": "var",
-            "Value": otpElement.otp
+            "Value": otp_element.otp
         }]
     }))
 
-    response.status_code = responseBSNL.status_code
+    response.status_code = response_bsnl.status_code
     return Message(message=str(otp_request.phone))
 
 
@@ -312,6 +282,11 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
         return Message(message="Wrong OTP")
 
 
+@app.post("/profile", response_model=UserbaseModel)
+def profile(profile_request: ProfileRequest, db: Session = Depends(get_db)):
+    return getUserFromToken(db, profile_request.token)
+
+
 @app.get("/get/locations")
 def getLocation():
     return FileResponse("locations.json")
@@ -319,15 +294,16 @@ def getLocation():
 
 @app.get("/download")
 def download():
-    return FileResponse(LATEST_APP_PATH)
+    return FileResponse(config.LATEST_APP_PATH)
 
 
 @app.get("/version")
 def version():
-    return FileResponse(VERSION_FILE)
+    return FileResponse(config.VERSION_FILE)
 
 
-@app.post("/test")
+@app.post("/test", description="Use this endpoint to test that your application is sending uuid correctly and the "
+                               "server is reading it")
 @verifyRequestUUID
 def test(test_request: Test, response: Response):
     return Message(message="successful!")

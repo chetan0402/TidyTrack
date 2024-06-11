@@ -35,6 +35,7 @@ class UserbaseModel(BaseModel):
     name: str
     id: str
     phone: int
+    usergroup: int
 
     class Config:
         from_attributes = True
@@ -100,3 +101,7 @@ class Message(BaseModel):
 
 class Test(BaseModel):
     id: str
+
+
+class ProfileRequest(BaseModel):
+    token: str
