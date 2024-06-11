@@ -7,7 +7,10 @@ from functools import wraps
 
 
 def validUUID(string) -> bool:
-    return re.fullmatch(r'[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}', string).string == string
+    try:
+        return re.fullmatch(r'[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}', string).string == string
+    except AttributeError:
+        return False
 
 
 def verifyRequestUUID(func):
