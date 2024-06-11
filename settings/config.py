@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from pydantic import BaseModel
 
@@ -14,6 +15,6 @@ class Config(BaseModel):
 
 
 def get_config() -> Config:
-    with open("config.json", "r") as file:
+    with open(Path.home().joinpath("settings").joinpath("config.json"), "r") as file:
         config = json.load(file)
         return Config(**config)
