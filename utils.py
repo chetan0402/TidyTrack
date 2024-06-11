@@ -5,7 +5,8 @@ import io
 import base64
 import models
 import time
-
+from fastapi.exceptions import HTTPException
+from starlette import status
 
 def clean_otp(db: Session):
     db.query(models.OTP).filter(models.OTP.deleteTime < int(time.time())).delete()
@@ -22,7 +23,11 @@ def getUserFromPhone(db: Session, phone: int) -> models.Userbase:
 
 def getUserFromToken(db: Session, token: str) -> models.Userbase:
     user_session: models.Tokens = db.query(models.Tokens).filter(models.Tokens.idtokens == token).first()
+    if user_session is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     user: models.Userbase = db.query(models.Userbase).filter(models.Userbase.id == user_session.user).first()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     return user
 
 

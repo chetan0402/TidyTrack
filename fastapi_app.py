@@ -122,6 +122,7 @@ def foodReport(food_report_request: FoodReportRequest, response: Response, db: S
     }
 })
 def otpSend(otp_request: OTPRequest, response: Response, db: Session = Depends(get_db)):
+    # Commenting everything cuz this workflow is hard to understand.
     clean_otp(db)
     # If there is no id in the request, it means that the request must be a login request
     if otp_request.id is None:
@@ -282,7 +283,15 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
         return Message(message="Wrong OTP")
 
 
-@app.post("/profile", response_model=UserbaseModel)
+@app.post("/profile", tags=["account"], response_model=UserbaseModel, responses={
+    401: {
+        "model": HTTPException
+    },
+    422: {
+        "model": HTTPException,
+        "description": "Delete the token and ask the user to login again."
+    }
+})
 def profile(profile_request: ProfileRequest, db: Session = Depends(get_db)):
     return getUserFromToken(db, profile_request.token)
 
