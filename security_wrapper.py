@@ -12,10 +12,9 @@ def validUUID(string) -> bool:
 
 def verifyRequestUUID(func):
     @wraps(func)
-    def wrapper(request: Request,response: Response, *args, **kwargs):
-        ticket_id = asyncio.run(request.json())['id']
-        if not validUUID(ticket_id):
-            response.status_code = 400
+    def wrapper(*args, **kwargs):
+        if not validUUID(kwargs.get('test_request').id):
+            kwargs.get("response").status_code = 400
             return Message(message="Invalid UUID")
         return func(*args, **kwargs)
 
