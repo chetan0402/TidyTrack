@@ -13,6 +13,8 @@ def validUUID(string) -> bool:
 def verifyRequestUUID(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        print(args)
+        print(kwargs)
         if not validUUID(kwargs.get('test_request').id):
             kwargs.get("response").status_code = 400
             return Message(message="Invalid UUID")
