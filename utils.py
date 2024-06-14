@@ -3,10 +3,13 @@ from pathlib import Path
 from PIL import Image
 import io
 import base64
+
+import constants.ReportType
 import models
 import time
 from fastapi.exceptions import HTTPException
 from starlette import status
+
 
 def clean_otp(db: Session):
     db.query(models.OTP).filter(models.OTP.deleteTime < int(time.time())).delete()
@@ -29,6 +32,23 @@ def getUserFromToken(db: Session, token: str) -> models.Userbase:
     if user is None:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     return user
+
+
+def addReport(db: Session, ticket_id: str, location: str, selected: int, other: str, img: str, report_time: int, user: str,
+              report_type: constants.ReportType.ReportType) -> None:
+    report_element = models.Report(
+        ticket_id=ticket_id,
+        location=location,
+        selected=selected,
+        other=other,
+        img=img,
+        time=report_time,
+        user=user,
+        type=report_type.value
+    )
+    db.add(report_element)
+    db.commit()
+    db.refresh(report_element)
 
 
 def saveIMG(img_string: str, local_path: str) -> None:

@@ -10,27 +10,6 @@ class AdminModel(BaseModel):
         from_attributes = True
 
 
-class MainModel(BaseModel):
-    feedback: str
-    imgpath: str
-    rating: int
-    locationcode: str
-    time: int
-    schno: str
-
-    class Config:
-        from_attributes = True
-
-
-class TokensModel(BaseModel):
-    idtokens: str
-    time: int
-    user: str
-
-    class Config:
-        from_attributes = True
-
-
 class UserbaseModel(BaseModel):
     name: str
     id: str
