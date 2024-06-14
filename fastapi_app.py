@@ -14,6 +14,7 @@ from database import SessionLocal
 from schema import *
 from utils import *
 from security_wrapper import *
+from constants.ReportType import *
 
 
 def get_db():
@@ -65,14 +66,15 @@ def internetReport(internet_report: InternetReport, response: Response, db: Sess
     time_rn = int(time.time())
     local_path = f"internet-report-{time_rn}-{user.id}.png"
 
-    internet_complain = models.InternetComplain(
+    internet_complain = models.Report(
         ticket_id=internet_report.id,
         location=internet_report.location,
         selected=internet_report.selected,
         other=clean_string(internet_report.other),
         img=local_path,
         time=time_rn,
-        user=user.id
+        user=user.id,
+        type=ReportType.INTERNET.value
     )
     db.add(internet_complain)
     saveIMG(internet_report.img, local_path)
@@ -98,13 +100,15 @@ def foodReport(food_report_request: FoodReportRequest, response: Response, db: S
         response.status_code = status.HTTP_403_FORBIDDEN
         return Message(message="You are not allowed to report")
 
-    food_report = models.FoodReport(
+    food_report = models.Report(
         ticket_id=food_report_request.id,
         location=food_report_request.location,
         selected=food_report_request.selected,
         other=clean_string(food_report_request.other),
         time=int(time.time()),
-        user=user.id
+        user=user.id,
+        img="",
+        type=ReportType.FOOD.value
     )
     db.add(food_report)
     db.commit()

@@ -43,24 +43,14 @@ class OTP(Base):
     nextSendTime = Column(Integer)
 
 
-class InternetComplain(Base):
-    __tablename__ = "internet"
+class Report(Base):
+    __tablename__ = "report"
 
-    ticket_id = Column(String, primary_key=True)
+    ticket_id = Column(String(36), primary_key=True)
     location = Column(String)
     selected = Column(Integer)
     other = Column(String)
     img = Column(String)
     time = Column(Integer)
     user = Column(String)
-
-
-class FoodReport(Base):
-    __tablename__ = "food"
-    # TODO - create table
-    ticket_id = Column(String, primary_key=True)
-    location = Column(String)
-    selected = Column(Integer)
-    other = Column(String)
-    time = Column(Integer)
-    user = Column(String)
+    type = Column(Integer)
