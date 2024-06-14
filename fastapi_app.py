@@ -285,10 +285,10 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
 
 @app.post("/profile", tags=["account"], response_model=UserbaseModel, responses={
     401: {
-        "detail":""
+        "detail": ""
     },
     422: {
-        "detail":"",
+        "detail": "",
         "description": "Delete the token and ask the user to login again."
     }
 })
