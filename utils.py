@@ -11,6 +11,7 @@ import time
 from fastapi.exceptions import HTTPException
 from starlette import status
 from schema import *
+from typing import Union
 
 
 def clean_string(string) -> str:
@@ -40,7 +41,7 @@ def getUserFromToken(db: Session, token: str) -> models.Userbase:
     return user
 
 
-def addReport(db: Session, report_element: BaseReport | WithImgReport, report_time: int, userid: str,
+def addReport(db: Session, report_element: Union[BaseReport,WithImgReport], report_time: int, userid: str,
               local_path: str, report_type: constants.ReportType.ReportType) -> None:
     report_element = models.Report(
         ticket_id=report_element.id,
