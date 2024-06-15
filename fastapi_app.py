@@ -52,20 +52,10 @@ def homePage():
 @verifyRequestUUID
 def internetReport(internet_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, internet_report.token)
-
-    if user.usergroup != 0:
-        response.status_code = status.HTTP_403_FORBIDDEN
-        return Message(message="You are not allowed to report")
-
-    # TODO - rate limit number of reports in a day
-
-    time_rn = int(time.time())
-    local_path = f"internet-report-{time_rn}-{user.id}.png"
+    verifyGroup(user, 0)
 
     addReport(db,
               report_element=internet_report,
-              local_path=local_path,
-              report_time=time_rn,
               userid=user.id,
               report_type=ReportType.INTERNET)
 
@@ -83,17 +73,12 @@ def internetReport(internet_report: WithImgReport, response: Response, db: Sessi
 @verifyRequestUUID
 def foodReport(food_report_request: BaseReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, food_report_request.token)
-
-    if user.usergroup != 0:
-        response.status_code = status.HTTP_403_FORBIDDEN
-        return Message(message="You are not allowed to report")
+    verifyGroup(user, 0)
 
     addReport(db,
               report_element=food_report_request,
-              report_time=int(time.time()),
               userid=user.id,
-              report_type=ReportType.FOOD,
-              local_path="")
+              report_type=ReportType.FOOD)
 
     return Message(message=food_report_request.id)
 
@@ -109,24 +94,77 @@ def foodReport(food_report_request: BaseReport, response: Response, db: Session 
 @verifyRequestUUID
 def washroomReport(washroom_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, washroom_report.token)
-
-    if user.usergroup != 0:
-        response.status_code = status.HTTP_403_FORBIDDEN
-        return Message(message="You are not allowed to report")
-
-    # TODO - rate limit number of reports in a day
-
-    time_rn = int(time.time())
-    local_path = f"washroom-report-{time_rn}-{user.id}.png"
+    verifyGroup(user, 0)
 
     addReport(db,
               report_element=washroom_report,
-              local_path=local_path,
-              report_time=time_rn,
               userid=user.id,
               report_type=ReportType.WASHROOM)
 
     return Message(message=washroom_report.id)
+
+
+@app.post("/water/report", tags=["report"], response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    403: {
+        "model": Message
+    }
+})
+@verifyRequestUUID
+def waterReport(water_report_request: BaseReport, response: Response, db: Session = Depends(get_db)):
+    user = getUserFromToken(db, water_report_request.token)
+    verifyGroup(user, 0)
+
+    addReport(db,
+              report_element=water_report_request,
+              userid=user.id,
+              report_type=ReportType.WATER)
+
+    return Message(message=water_report_request.id)
+
+
+@app.post("/cleaning/report", tags=["report"], response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    403: {
+        "model": Message
+    }
+})
+@verifyRequestUUID
+def cleaningReport(cleaning_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
+    user = getUserFromToken(db, cleaning_report.token)
+    verifyGroup(user, 0)
+
+    addReport(db,
+              report_element=cleaning_report,
+              userid=user.id,
+              report_type=ReportType.WASHROOM)
+
+    return Message(message=cleaning_report.id)
+
+
+@app.post("/other/report", tags=["report"], response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    403: {
+        "model": Message
+    }
+})
+@verifyRequestUUID
+def otherReport(other_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
+    user = getUserFromToken(db, other_report.token)
+    verifyGroup(user, 0)
+
+    addReport(db,
+              report_element=other_report,
+              userid=user.id,
+              report_type=ReportType.WASHROOM)
+
+    return Message(message=other_report.id)
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
@@ -315,6 +353,11 @@ def profile(profile_request: ProfileRequest, db: Session = Depends(get_db)):
 @app.get("/get/locations")
 def getLocation():
     return FileResponse("locations.json")
+
+
+@app.get("/locations/mess")
+def messLocation():
+    return FileResponse(Path.home().joinpath("constants").joinpath("location_mess.json"))
 
 
 @app.get("/download")

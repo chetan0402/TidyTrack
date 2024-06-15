@@ -1,9 +1,11 @@
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from pathlib import Path
 from PIL import Image
 import io
 import base64
 import re
+import time
 
 import constants.ReportType
 import models
@@ -41,8 +43,17 @@ def getUserFromToken(db: Session, token: str) -> models.Userbase:
     return user
 
 
-def addReport(db: Session, report_element: Union[BaseReport,WithImgReport], report_time: int, userid: str,
-              local_path: str, report_type: constants.ReportType.ReportType) -> None:
+def verifyGroup(user: models.Userbase, group_to_verify: int):
+    if user.usergroup != group_to_verify:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Group mismatch")
+
+
+def addReport(db: Session, report_element: Union[BaseReport, WithImgReport], userid: str,
+              report_type: constants.ReportType.ReportType) -> None:
+    report_time = int(time.time())
+    local_path = ""
+    if isinstance(report_element, WithImgReport):
+        local_path = f"{report_type.name}-{report_time}-{userid}.png"
     report_element = models.Report(
         ticket_id=report_element.id,
         location=report_element.location,
@@ -53,10 +64,13 @@ def addReport(db: Session, report_element: Union[BaseReport,WithImgReport], repo
         user=userid,
         type=report_type.value
     )
-    db.add(report_element)
+    try:
+        db.add(report_element)
+        db.commit()
+    except IntegrityError:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Please report to the developer.")
     if isinstance(report_element, WithImgReport):
         saveIMG(report_element.img, local_path)
-    db.commit()
     db.refresh(report_element)
 
 
