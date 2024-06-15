@@ -73,6 +73,13 @@ class Message(BaseModel):
         from_attributes = True
 
 
+class ExceptionReturn(BaseModel):
+    detail: str
+
+    class Config:
+        from_attributes = True
+
+
 class Test(BaseModel):
     id: str
 

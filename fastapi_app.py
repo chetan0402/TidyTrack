@@ -107,7 +107,7 @@ def foodReport(food_report_request: BaseReport, response: Response, db: Session 
     }
 })
 @verifyRequestUUID
-def internetReport(washroom_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
+def washroomReport(washroom_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, washroom_report.token)
 
     if user.usergroup != 0:
@@ -117,14 +117,14 @@ def internetReport(washroom_report: WithImgReport, response: Response, db: Sessi
     # TODO - rate limit number of reports in a day
 
     time_rn = int(time.time())
-    local_path = f"internet-report-{time_rn}-{user.id}.png"
+    local_path = f"washroom-report-{time_rn}-{user.id}.png"
 
     addReport(db,
               report_element=washroom_report,
               local_path=local_path,
               report_time=time_rn,
               userid=user.id,
-              report_type=ReportType.INTERNET)
+              report_type=ReportType.WASHROOM)
 
     return Message(message=washroom_report.id)
 
