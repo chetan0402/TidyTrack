@@ -3,12 +3,18 @@ from pathlib import Path
 from PIL import Image
 import io
 import base64
+import re
 
 import constants.ReportType
 import models
 import time
 from fastapi.exceptions import HTTPException
 from starlette import status
+from schema import *
+
+
+def clean_string(string) -> str:
+    return re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', '', string)
 
 
 def clean_otp(db: Session):
@@ -34,19 +40,21 @@ def getUserFromToken(db: Session, token: str) -> models.Userbase:
     return user
 
 
-def addReport(db: Session, ticket_id: str, location: str, selected: int, other: str, img: str, report_time: int, user: str,
-              report_type: constants.ReportType.ReportType) -> None:
+def addReport(db: Session, report_element: BaseReport | WithImgReport, report_time: int, userid: str,
+              local_path: str, report_type: constants.ReportType.ReportType) -> None:
     report_element = models.Report(
-        ticket_id=ticket_id,
-        location=location,
-        selected=selected,
-        other=other,
-        img=img,
+        ticket_id=report_element.id,
+        location=report_element.location,
+        selected=report_element.selected,
+        other=clean_string(report_element.other),
+        img=local_path,
         time=report_time,
-        user=user,
+        user=userid,
         type=report_type.value
     )
     db.add(report_element)
+    if isinstance(report_element, WithImgReport):
+        saveIMG(report_element.img, local_path)
     db.commit()
     db.refresh(report_element)
 

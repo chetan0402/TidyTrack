@@ -48,24 +48,19 @@ class SignupRequest(BaseModel):
         from_attributes = True
 
 
-class InternetReport(BaseModel):
+class BaseReport(BaseModel):
     id: str
     token: str
     location: str
     selected: int
     other: str
-    img: str
 
     class Config:
         from_attributes = True
 
 
-class FoodReportRequest(BaseModel):
-    id: str
-    token: str
-    location: str
-    selected: int
-    other: str
+class WithImgReport(BaseReport):
+    img: str
 
     class Config:
         from_attributes = True

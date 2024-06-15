@@ -25,10 +25,6 @@ def get_db():
         db.close()
 
 
-def clean_string(string) -> str:
-    return re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', '', string)
-
-
 # TODO - implement validation rule
 def isValidId(id: str) -> bool:
     return True
@@ -54,7 +50,7 @@ def homePage():
     }
 })
 @verifyRequestUUID
-def internetReport(internet_report: InternetReport, response: Response, db: Session = Depends(get_db)):
+def internetReport(internet_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, internet_report.token)
 
     if user.usergroup != 0:
@@ -66,15 +62,11 @@ def internetReport(internet_report: InternetReport, response: Response, db: Sess
     time_rn = int(time.time())
     local_path = f"internet-report-{time_rn}-{user.id}.png"
 
-    saveIMG(internet_report.img, local_path)
     addReport(db,
-              ticket_id=internet_report.id,
-              location=internet_report.location,
-              selected=internet_report.selected,
-              other=clean_string(internet_report.other),
-              img=local_path,
+              report_element=internet_report,
+              local_path=local_path,
               report_time=time_rn,
-              user=user.id,
+              userid=user.id,
               report_type=ReportType.INTERNET)
 
     return Message(message=internet_report.id)
@@ -89,7 +81,7 @@ def internetReport(internet_report: InternetReport, response: Response, db: Sess
     }
 })
 @verifyRequestUUID
-def foodReport(food_report_request: FoodReportRequest, response: Response, db: Session = Depends(get_db)):
+def foodReport(food_report_request: BaseReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, food_report_request.token)
 
     if user.usergroup != 0:
@@ -97,16 +89,44 @@ def foodReport(food_report_request: FoodReportRequest, response: Response, db: S
         return Message(message="You are not allowed to report")
 
     addReport(db,
-              ticket_id=food_report_request.id,
-              location=food_report_request.location,
-              selected=food_report_request.selected,
-              other=clean_string(food_report_request.other),
+              report_element=food_report_request,
               report_time=int(time.time()),
-              user=user.id,
-              img="",
-              report_type=ReportType.FOOD)
+              userid=user.id,
+              report_type=ReportType.FOOD,
+              local_path="")
 
     return Message(message=food_report_request.id)
+
+
+@app.post("/washroom/report", tags=["report"], response_model=Message, responses={
+    400: {
+        "model": Message
+    },
+    403: {
+        "model": Message
+    }
+})
+@verifyRequestUUID
+def internetReport(washroom_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
+    user = getUserFromToken(db, washroom_report.token)
+
+    if user.usergroup != 0:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return Message(message="You are not allowed to report")
+
+    # TODO - rate limit number of reports in a day
+
+    time_rn = int(time.time())
+    local_path = f"internet-report-{time_rn}-{user.id}.png"
+
+    addReport(db,
+              report_element=washroom_report,
+              local_path=local_path,
+              report_time=time_rn,
+              userid=user.id,
+              report_type=ReportType.INTERNET)
+
+    return Message(message=washroom_report.id)
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
