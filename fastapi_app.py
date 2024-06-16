@@ -38,7 +38,7 @@ if not config.loaded:
 
 @app.middleware("http")
 async def logAllRequest(request: Request, call_next):
-    request_json = await request.json()
+    request_json = await request.body()
     response = await call_next(request)
     print(request_json)
     return response
