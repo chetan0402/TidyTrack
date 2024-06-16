@@ -40,8 +40,13 @@ if not config.loaded:
 async def logAllRequest(request: Request, call_next):
     request_json = await request.body()
     response = await call_next(request)
-    print(request_json)
-    return response
+    try:
+        obj = json.loads(request_json)
+        if obj.get("img") is not None:
+            obj["img"] = 'Replaced'
+    finally:
+        print(request_json)
+        return response
 
 
 @app.get("/")
