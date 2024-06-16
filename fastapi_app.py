@@ -13,7 +13,6 @@ import models
 from database import SessionLocal
 from schema import *
 from utils import *
-from security_wrapper import *
 from constants.ReportType import *
 
 
@@ -41,130 +40,34 @@ def homePage():
     return FileResponse("templates/index.html")
 
 
-@app.post("/internet/report", tags=["report"], response_model=Message, responses={
-    400: {
-        "model": Message
-    },
-    403: {
-        "model": Message
-    }
-})
-@verifyRequestUUID
+@app.post("/internet/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
 def internetReport(internet_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
-    user = getUserFromToken(db, internet_report.token)
-    verifyGroup(user, 0)
-
-    addReport(db,
-              report_element=internet_report,
-              userid=user.id,
-              report_type=ReportType.INTERNET)
-
-    return Message(message=internet_report.id)
+    return addReport(db, report_element=internet_report, report_type=ReportType.INTERNET)
 
 
-@app.post("/food/report", tags=["report"], response_model=Message, responses={
-    400: {
-        "model": Message
-    },
-    403: {
-        "model": Message
-    }
-})
-@verifyRequestUUID
-def foodReport(food_report_request: BaseReport, response: Response, db: Session = Depends(get_db)):
-    user = getUserFromToken(db, food_report_request.token)
-    verifyGroup(user, 0)
-
-    addReport(db,
-              report_element=food_report_request,
-              userid=user.id,
-              report_type=ReportType.FOOD)
-
-    return Message(message=food_report_request.id)
+@app.post("/food/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
+def foodReport(food_report_request: BaseReport, db: Session = Depends(get_db)):
+    return addReport(db, report_element=food_report_request, report_type=ReportType.FOOD)
 
 
-@app.post("/washroom/report", tags=["report"], response_model=Message, responses={
-    400: {
-        "model": Message
-    },
-    403: {
-        "model": Message
-    }
-})
-@verifyRequestUUID
-def washroomReport(washroom_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
-    user = getUserFromToken(db, washroom_report.token)
-    verifyGroup(user, 0)
-
-    addReport(db,
-              report_element=washroom_report,
-              userid=user.id,
-              report_type=ReportType.WASHROOM)
-
-    return Message(message=washroom_report.id)
+@app.post("/washroom/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
+def washroomReport(washroom_report: WithImgReport, db: Session = Depends(get_db)):
+    return addReport(db, report_element=washroom_report, report_type=ReportType.WASHROOM)
 
 
-@app.post("/water/report", tags=["report"], response_model=Message, responses={
-    400: {
-        "model": Message
-    },
-    403: {
-        "model": Message
-    }
-})
-@verifyRequestUUID
-def waterReport(water_report_request: BaseReport, response: Response, db: Session = Depends(get_db)):
-    user = getUserFromToken(db, water_report_request.token)
-    verifyGroup(user, 0)
-
-    addReport(db,
-              report_element=water_report_request,
-              userid=user.id,
-              report_type=ReportType.WATER)
-
-    return Message(message=water_report_request.id)
+@app.post("/water/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
+def waterReport(water_report_request: BaseReport, db: Session = Depends(get_db)):
+    return addReport(db, report_element=water_report_request, report_type=ReportType.WATER)
 
 
-@app.post("/cleaning/report", tags=["report"], response_model=Message, responses={
-    400: {
-        "model": Message
-    },
-    403: {
-        "model": Message
-    }
-})
-@verifyRequestUUID
-def cleaningReport(cleaning_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
-    user = getUserFromToken(db, cleaning_report.token)
-    verifyGroup(user, 0)
-
-    addReport(db,
-              report_element=cleaning_report,
-              userid=user.id,
-              report_type=ReportType.WASHROOM)
-
-    return Message(message=cleaning_report.id)
+@app.post("/cleaning/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
+def cleaningReport(cleaning_report: WithImgReport, db: Session = Depends(get_db)):
+    return addReport(db, report_element=cleaning_report, report_type=ReportType.WASHROOM)
 
 
-@app.post("/other/report", tags=["report"], response_model=Message, responses={
-    400: {
-        "model": Message
-    },
-    403: {
-        "model": Message
-    }
-})
-@verifyRequestUUID
-def otherReport(other_report: BaseReport, response: Response, db: Session = Depends(get_db)):
-    user = getUserFromToken(db, other_report.token)
-    verifyGroup(user, 0)
-
-    addReport(db,
-              report_element=other_report,
-              userid=user.id,
-              report_type=ReportType.WASHROOM)
-
-    return Message(message=other_report.id)
+@app.post("/other/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
+def otherReport(other_report: BaseReport, db: Session = Depends(get_db)):
+    return addReport(db, report_element=other_report, report_type=ReportType.WASHROOM)
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
@@ -367,8 +270,8 @@ def version():
 
 @app.post("/test", description="Use this endpoint to test that your application is sending uuid correctly and the "
                                "server is reading it")
-@verifyRequestUUID
-def test(test_request: Test, response: Response):
+def test(test_request: Test):
+    validUUID(test_request.id)
     return Message(message="successful!")
 
 

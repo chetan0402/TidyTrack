@@ -16,6 +16,15 @@ from schema import *
 from typing import Union
 
 ExceptionReturnDocs = {"model": ExceptionReturn}
+ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
+
+
+def validUUID(string) -> bool:
+    try:
+        return re.fullmatch(r'[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}',
+                            string).string == string
+    except AttributeError:
+        return False
 
 
 def clean_string(string) -> str:
@@ -50,12 +59,18 @@ def verifyGroup(user: models.Userbase, group_to_verify: int):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Group mismatch")
 
 
-def addReport(db: Session, report_element: Union[BaseReport, WithImgReport], userid: str,
-              report_type: constants.ReportType.ReportType) -> None:
+def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
+              report_type: constants.ReportType.ReportType) -> Message:
+    if not validUUID(report_element.id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    user = getUserFromToken(db, report_element.token)
+    verifyGroup(user, 0)
+
     report_time = int(time.time())
     local_path = ""
+
     if isinstance(report_element, WithImgReport):
-        local_path = f"{report_type.name}-{report_time}-{userid}.png"
+        local_path = f"{report_type.name}-{report_time}-{user.id}.png"
     report_element = models.Report(
         ticket_id=report_element.id,
         location=report_element.location,
@@ -63,7 +78,7 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport], use
         other=clean_string(report_element.other),
         img=local_path,
         time=report_time,
-        user=userid,
+        user=user.id,
         type=report_type.value
     )
     try:
@@ -74,6 +89,8 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport], use
     if isinstance(report_element, WithImgReport):
         saveIMG(report_element.img, local_path)
     db.refresh(report_element)
+
+    return Message(message=report_element.id)
 
 
 def saveIMG(img_string: str, local_path: str) -> None:
