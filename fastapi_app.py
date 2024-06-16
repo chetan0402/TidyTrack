@@ -36,19 +36,6 @@ if not config.loaded:
     raise Exception("Config not loaded")
 
 
-@app.middleware("http")
-async def logAllRequest(request: Request, call_next):
-    request_json = await request.body()
-    response = await call_next(request)
-    try:
-        obj = json.loads(request_json)
-        if obj.get("img") is not None:
-            obj["img"] = 'Replaced'
-    finally:
-        print(request_json)
-        return response
-
-
 @app.get("/")
 def homePage():
     return FileResponse("templates/index.html")
@@ -168,7 +155,7 @@ def cleaningReport(cleaning_report: WithImgReport, response: Response, db: Sessi
     }
 })
 @verifyRequestUUID
-def otherReport(other_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
+def otherReport(other_report: BaseReport, response: Response, db: Session = Depends(get_db)):
     user = getUserFromToken(db, other_report.token)
     verifyGroup(user, 0)
 
