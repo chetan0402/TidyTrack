@@ -8,3 +8,4 @@ class ReportType(Enum):
     WATER = 4
     CLEANING = 5
     OTHER = 6
+    SWEEPER = 7

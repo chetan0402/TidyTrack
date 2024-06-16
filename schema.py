@@ -86,3 +86,10 @@ class Test(BaseModel):
 
 class ProfileRequest(BaseModel):
     token: str
+
+
+class SweeperReport(BaseModel):
+    uuid: str
+    token: str
+    location: str
+    img: str

@@ -41,7 +41,7 @@ def homePage():
 
 
 @app.post("/internet/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
-def internetReport(internet_report: WithImgReport, response: Response, db: Session = Depends(get_db)):
+def internetReport(internet_report: WithImgReport, db: Session = Depends(get_db)):
     return addReport(db, report_element=internet_report, report_type=ReportType.INTERNET)
 
 
@@ -68,6 +68,30 @@ def cleaningReport(cleaning_report: WithImgReport, db: Session = Depends(get_db)
 @app.post("/other/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
 def otherReport(other_report: BaseReport, db: Session = Depends(get_db)):
     return addReport(db, report_element=other_report, report_type=ReportType.WASHROOM)
+
+
+@app.post("/sweeper/report", tags=["sweeper"], response_model=Message)
+def sweeperReport(sweeper_report: SweeperReport, db: Session = Depends(get_db)):
+    validUUID(sweeper_report.uuid)
+    user = getUserFromToken(db, sweeper_report.token)
+    verifyGroup(user, 2)
+
+    time_rn = int(time.time())
+    local_path = f"{ReportType.SWEEPER.name.lower()}-{time_rn}-{user.id}.png"
+    # TODO - add mark late logic
+    sweeper_record = models.SweeperRecords(
+        uuid=sweeper_report.uuid,
+        location=sweeper_report.location,
+        img_path=local_path,
+        late=False,
+        time=time_rn,
+        sweeper=user.id
+    )
+    db.add(sweeper_record)
+    saveIMG(sweeper_report.img, local_path)
+    db.commit()
+    db.refresh(sweeper_record)
+    return Message(message=sweeper_record.uuid)
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={

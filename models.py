@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 
 from database import Base
 
@@ -54,3 +54,14 @@ class Report(Base):
     time = Column(Integer)
     user = Column(String)
     type = Column(Integer)
+
+
+class SweeperRecords(Base):
+    __tablename__ = "sweeperrecords"
+
+    uuid = Column(String(36), primary_key=True)
+    location = Column(String)
+    img_path = Column(String)
+    late = Column(Boolean)
+    time = Column(Integer)
+    sweeper = Column(String)
