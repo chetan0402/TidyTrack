@@ -12,6 +12,7 @@ class Config(BaseModel):
     TARGET_PHOTO_SIZE: int
     VERSION_FILE: str
     loaded: bool = False
+    debug: bool = False
 
 
 def get_config() -> Config:

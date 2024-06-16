@@ -5,7 +5,7 @@ import subprocess
 import time
 
 import requests
-from fastapi import FastAPI, Depends, Response, status
+from fastapi import FastAPI, Depends, Response, status, Request
 from fastapi.responses import FileResponse
 
 import settings.config
@@ -34,6 +34,14 @@ app = FastAPI()
 config = settings.config.get_config()
 if not config.loaded:
     raise Exception("Config not loaded")
+
+
+@app.middleware("http")
+async def logAllRequest(request: Request, call_next):
+    request_json = await request.json()
+    response = await call_next(request)
+    print(request_json)
+    return response
 
 
 @app.get("/")
@@ -338,13 +346,8 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
 
 
 @app.post("/profile", tags=["account"], response_model=UserbaseModel, responses={
-    401: {
-        "detail": ""
-    },
-    422: {
-        "detail": "",
-        "description": "Delete the token and ask the user to login again."
-    }
+    401: ExceptionReturnDocs,
+    422: ExceptionReturnDocs
 })
 def profile(profile_request: ProfileRequest, db: Session = Depends(get_db)):
     return getUserFromToken(db, profile_request.token)

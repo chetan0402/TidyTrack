@@ -15,6 +15,8 @@ from starlette import status
 from schema import *
 from typing import Union
 
+ExceptionReturnDocs = {"model": ExceptionReturn}
+
 
 def clean_string(string) -> str:
     return re.sub(r'[^\x00-\x20\x2C\x2E\x30-\x39\x41-\x5A\x61-\x7A]', '', string)
@@ -75,7 +77,7 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport], use
 
 
 def saveIMG(img_string: str, local_path: str) -> None:
-    img_path = Path.home().joinpath("img").joinpath(local_path)
+    img_path = Path.home().joinpath("img").joinpath(local_path.lower())
     img = Image.open(io.BytesIO(base64.b64decode(img_string.replace("\\n", "").replace("\\", ""))))
     img_buffer = io.BytesIO()
     quality = 100
