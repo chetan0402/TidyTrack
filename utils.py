@@ -95,7 +95,7 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
     return Message(message=report_element.id)
 
 
-def getReport(db: Session, location: Union[str | None], from_time: int, to_time: int,
+def getReport(db: Session, location: str | None, from_time: int, to_time: int,
               report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
     if location is None:
         return db.query(models.Report).filter(and_(
