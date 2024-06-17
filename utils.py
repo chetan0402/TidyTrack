@@ -103,8 +103,8 @@ def getReport(db: Session, location: Union[str, None], from_time: int, to_time: 
             models.Report.type == report_type.value).offset(offset).limit(limit).all()
     else:
         return db.query(models.Report).filter(and_(and_(
-            models.Report.time.between(from_time, to_time)),
-            models.Report.type == report_type.value),
+            models.Report.time.between(from_time, to_time),
+            models.Report.type == report_type.value)),
             models.Report.location == location).offset(offset).limit(limit).all()
 
 
