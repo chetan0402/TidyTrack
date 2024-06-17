@@ -99,13 +99,13 @@ def getReport(db: Session, location: Union[str, None], from_time: int, to_time: 
               report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
     if location is None:
         return db.query(models.Report).filter(and_(
-            models.Report.time.between(from_time, to_time)),
-            models.Report.type == report_type.value).offset(offset).limit(limit).all()
+            models.Report.time.between(from_time, to_time),
+            models.Report.type == report_type.value)).offset(offset).limit(limit).all()
     else:
         return db.query(models.Report).filter(and_(and_(
             models.Report.time.between(from_time, to_time),
-            models.Report.type == report_type.value)),
-            models.Report.location == location).offset(offset).limit(limit).all()
+            models.Report.type == report_type.value),
+            models.Report.location == location)).offset(offset).limit(limit).all()
 
 
 def saveIMG(img_string: str, local_path: str) -> None:
