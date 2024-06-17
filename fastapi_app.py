@@ -7,6 +7,7 @@ import time
 import requests
 from fastapi import FastAPI, Depends, Response, status, Request
 from fastapi.responses import FileResponse
+from fastapi.templating import Jinja2Templates
 
 import settings.config
 import models
@@ -30,6 +31,7 @@ def isValidId(id: str) -> bool:
 
 
 app = FastAPI()
+template = Jinja2Templates(directory="templates")
 config = settings.config.get_config()
 if not config.loaded:
     raise Exception("Config not loaded")
@@ -92,6 +94,13 @@ def sweeperReport(sweeper_report: SweeperReport, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(sweeper_record)
     return Message(message=sweeper_record.uuid)
+
+
+@app.get("/internet/get", tags=["webview"])
+def internetGet(location: Union[str:None], from_time: int, to_time: int, offset: int, db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html",context={
+                                         "data": getReport(db, location, from_time, to_time, offset=offset,
+                                                           report_type=ReportType.INTERNET)})
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
