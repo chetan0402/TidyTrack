@@ -97,10 +97,10 @@ def sweeperReport(sweeper_report: SweeperReport, db: Session = Depends(get_db)):
 
 
 @app.get("/internet/get", tags=["webview"])
-def internetGet(location: str, from_time: int, to_time: int, offset: int, db: Session = Depends(get_db)):
-    return template.TemplateResponse(name="dashboard_entry_show.html",context={
-                                         "data": getReport(db, location, from_time, to_time, offset=offset,
-                                                           report_type=ReportType.INTERNET)})
+def internetGet(location: Union[str, None], from_time: int, to_time: int, offset: int, db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html", context={
+        "data": getReport(db, location, from_time, to_time, offset=offset,
+                          report_type=ReportType.INTERNET)})
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
