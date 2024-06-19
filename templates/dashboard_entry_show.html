@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+
+    </style>
 </head>
 <body>
-<table>
-    <tr>
-        <th>Ticket ID</th>
-        <th>Location</th>
-        <th>Selected</th>
-        <th>Other</th>
-        <th>Image</th>
-        <th>Time</th>
-        <th>User</th>
-    </tr>
+<div>
     {% for row in data %}
-        <tr>
-        <td>{{ row.ticket_id }}</td>
-        <td>{{ row.location }}</td>
-        <td>{{ row.selected }}</td>
-        <td>{{ row.other }}</td>
-        <td><a href="{{ row.img }}">Open Image</a></td>
-        <td>{{ row.time }}</td>
-        <td>{{ row.user }}</td>
-        </tr>
+        <div class="card" id="{{ row.ticket_id }}">
+            <p class="location">{{ row.location }}</p>
+            <p class="selected">{{ row.selected }}</p>
+            <p class="other">{{ row.other }}</p>
+            <p class="time">{{ convertTime(row.time) }}</p>
+            <p class="image-link"><a href="{{ row.img }}">Open Image</a></p>
+        </div>
     {% endfor %}
-</table>
+</div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import io
 import base64
 import re
 import time
+from datetime import datetime
 
 from sqlalchemy.sql.operators import and_
 
@@ -19,6 +20,10 @@ from typing import Union, Type
 
 ExceptionReturnDocs = {"model": ExceptionReturn}
 ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
+
+
+def convertTime(timestamp: int) -> str:
+    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
 
 def validUUID(string) -> bool:
@@ -96,7 +101,8 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
 
 
 def getReport(db: Session, location: Union[str, None], from_time: int, to_time: int,
-              report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
+              report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> list[
+    Type[models.Report]]:
     if location is None:
         return db.query(models.Report).filter(and_(
             models.Report.time.between(from_time, to_time),

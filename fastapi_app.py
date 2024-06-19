@@ -102,7 +102,9 @@ def internetGet(request: Request, location: Union[str, None], from_time: int, to
     return template.TemplateResponse(name="dashboard_entry_show.html", context={
         "request": request,
         "data": getReport(db, location, from_time, to_time, offset=offset,
-                          report_type=ReportType.INTERNET)})
+                          report_type=ReportType.INTERNET),
+        "convertTime": convertTime
+    })
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
