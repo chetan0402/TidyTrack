@@ -34,8 +34,48 @@
             <p class="other">{{ row.other }}</p>
             <p class="time">{{ convertTime(row.time) }}</p>
             <p class="image-link"><a href="{{ row.img }}">Open Image</a></p>
+            <button onclick="taskIncomplete(this)">Set as Incomplete</button>
+            <button onclick="taskComplete(this)">Set as Complete</button>
         </div>
     {% endfor %}
 </div>
+<div id="pop-up-bg">
+    <div id="pop-up">
+        <p>Confirm change?</p>
+        <button id="yes" onclick="confirmed()">Yes</button>
+        <button id="no" onclick="closePop()">No</button>
+    </div>
+</div>
+<script>
+    let token=""
+    let taskID
+    let toChange
+    function taskIncomplete(ele){
+        toChange=0
+        taskID = ele.parentNode.id
+        showPop()
+    }
+    function taskComplete(ele){
+        toChange=1
+        taskID = ele.parentNode.id
+        showPop()
+    }
+    function showPop(){
+        document.getElementById("pop-up-bg").style.opacity=1;
+        document.getElementById("pop-up-bg").style.zIndex=1;
+        document.getElementById("pop-up").style.opacity=1;
+        document.getElementById("pop-up").style.zIndex=2;
+    }
+    function confirmed(){
+        fetch("https://tt.manit.ac.in/?taskid="+taskId+"&status="+toChange)
+        closePop()
+    }
+    function closePop(){
+        document.getElementById("pop-up-bg").style.opacity=0;
+        document.getElementById("pop-up-bg").style.zIndex=-1;
+        document.getElementById("pop-up").style.opacity=0;
+        document.getElementById("pop-up").style.zIndex=-1;
+    }
+</script>
 </body>
 </html>
