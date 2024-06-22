@@ -360,13 +360,6 @@ def version():
     return FileResponse(config.VERSION_FILE)
 
 
-@app.post("/test", description="Use this endpoint to test that your application is sending uuid correctly and the "
-                               "server is reading it")
-def test(test_request: Test):
-    validUUID(test_request.id)
-    return Message(message="successful!")
-
-
 @app.post("/update/code", include_in_schema=False)
 async def reloadCode():
     subprocess.run(["git", "pull"])
