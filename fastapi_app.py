@@ -107,6 +107,61 @@ def internetGet(request: Request, location: Union[str, None], from_time: int, to
     })
 
 
+@app.get("/food/get", tags=["webview"])
+def foodGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
+            db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html", context={
+        "request": request,
+        "data": getReport(db, location, from_time, to_time, offset=offset,
+                          report_type=ReportType.FOOD),
+        "convertTime": convertTime
+    })
+
+
+@app.get("/washroom/get", tags=["webview"])
+def washroomGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
+                db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html", context={
+        "request": request,
+        "data": getReport(db, location, from_time, to_time, offset=offset,
+                          report_type=ReportType.WASHROOM),
+        "convertTime": convertTime
+    })
+
+
+@app.get("/water/get", tags=["webview"])
+def waterGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
+             db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html", context={
+        "request": request,
+        "data": getReport(db, location, from_time, to_time, offset=offset,
+                          report_type=ReportType.WATER),
+        "convertTime": convertTime
+    })
+
+
+@app.get("/cleaning/get", tags=["webview"])
+def cleaningGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
+                db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html", context={
+        "request": request,
+        "data": getReport(db, location, from_time, to_time, offset=offset,
+                          report_type=ReportType.CLEANING),
+        "convertTime": convertTime
+    })
+
+
+@app.get("/other/get", tags=["webview"])
+def otherGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
+             db: Session = Depends(get_db)):
+    return template.TemplateResponse(name="dashboard_entry_show.html", context={
+        "request": request,
+        "data": getReport(db, location, from_time, to_time, offset=offset,
+                          report_type=ReportType.OTHER),
+        "convertTime": convertTime
+    })
+
+
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
