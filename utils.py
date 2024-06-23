@@ -78,7 +78,7 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
 
     if isinstance(report_element, WithImgReport):
         local_path = f"{report_type.name}-{report_time}-{user.id}.png"
-    report_element = models.Report(
+    report = models.Report(
         ticket_id=report_element.id,
         location=report_element.location,
         selected=report_element.selected,
@@ -89,13 +89,13 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
         type=report_type.value
     )
     try:
-        db.add(report_element)
+        db.add(report)
         db.commit()
     except IntegrityError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Please report to the developer.")
     if isinstance(report_element, WithImgReport):
         saveIMG(report_element.img, local_path)
-    db.refresh(report_element)
+    db.refresh(report)
 
     return Message(message=report_element.id)
 
