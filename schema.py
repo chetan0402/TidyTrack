@@ -101,7 +101,7 @@ class MyReportsRequest(BaseModel):
     offset: int = 0
 
 
-class MyReportsResponse(BaseModel):
+class MyReports(BaseModel):
     ticket_id: str
     location: str
     selected: int
@@ -110,3 +110,7 @@ class MyReportsResponse(BaseModel):
     time: int
     type: int
     rating: int
+
+
+class MyReportsResponse(BaseModel):
+    reports: list[MyReports]

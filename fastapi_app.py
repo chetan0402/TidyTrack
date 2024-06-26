@@ -340,9 +340,9 @@ def profile(profile_request: ProfileRequest, db: Session = Depends(get_db)):
     return getUserFromToken(db, profile_request.token)
 
 
-@app.post("/reports", tags=["account"], response_model=list[MyReportsResponse])
+@app.post("/reports", tags=["account"], response_model=MyReportsResponse)
 def myReports(my_reports: MyReportsRequest, db: Session = Depends(get_db)):
-    return getReportFromUser(db, my_reports.token, offset=my_reports.offset)
+    return {"reports": getReportFromUser(db, my_reports.token, offset=my_reports.offset)}
 
 
 @app.get("/get/locations")
