@@ -8,6 +8,7 @@ import requests
 from fastapi import FastAPI, Depends, Response, status, Request
 from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 import settings.config
 import models
@@ -31,6 +32,7 @@ def isValidId(id: str) -> bool:
 
 
 app = FastAPI()
+app.mount("/img", StaticFiles(directory="img"), name="img")
 template = Jinja2Templates(directory="templates")
 config = settings.config.get_config()
 if not config.loaded:
