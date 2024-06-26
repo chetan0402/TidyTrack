@@ -104,7 +104,7 @@ class MyReportsRequest(BaseModel):
 class MyReportsResponse(BaseModel):
     ticket_id: str
     location: str
-    selected: str
+    selected: int
     other: str
     img: str
     time: int
