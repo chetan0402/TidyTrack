@@ -94,3 +94,8 @@ class SweeperReport(BaseModel):
     token: str
     location: str
     img: str
+
+
+class MyReportsRequest(BaseModel):
+    token: str
+    offset: int = 0

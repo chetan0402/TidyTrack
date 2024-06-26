@@ -115,6 +115,11 @@ def getReport(db: Session, location: Union[str, None], from_time: int, to_time: 
             models.Report.location == location)).offset(offset).limit(limit).all()
 
 
+def getReportFromUser(db: Session, token: str, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
+    user = getUserFromToken(db, token)
+    return db.query(models.Report).filter(models.Report.user == user.id).offset(offset).limit(limit).all()
+
+
 def saveIMG(img_string: str, local_path: str) -> None:
     img_path = Path.home().joinpath("img").joinpath(local_path.lower())
     img = Image.open(io.BytesIO(base64.b64decode(img_string.replace("\\n", "").replace("\\", ""))))
