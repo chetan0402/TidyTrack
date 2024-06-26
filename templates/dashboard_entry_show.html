@@ -17,8 +17,9 @@
             background: #494949;
             padding: 5px 10px;
             border-radius: 10px;
+            height: fit-content;
         }
-        .card>p{
+        .card>div{
             margin: 5px 0;
             font-family: "Poppins", sans-serif;
             font-weight: 500;
@@ -32,6 +33,9 @@
             z-index: -1;
             opacity: 0;
         }
+        .changeButton{
+            height: fit-content;
+        }
     </style>
 </head>
 <body>
@@ -40,10 +44,7 @@
         <div class="card" data-status="{{ row.status }}" id="{{ row.ticket_id }}">
             <img src="/img/{{ row.img }}" alt="">
             <div>
-                <p class="location">{{ row.location }}</p>
-                <p class="selected">{{ row.selected }}</p>
-                <p class="other">{{ row.other }}</p>
-                <p class="time">{{ convertTime(row.time) }}</p>
+                {{ row.location }}<br>{{ row.selected }}<br>{{ row.other }}<br>{{ convertTime(row.time) }}
             </div>
             <button class="changeButton incomplete" onclick="taskIncomplete(this)">Set as Incomplete</button>
             <button class="changeButton complete" onclick="taskComplete(this)">Set as Complete</button>
