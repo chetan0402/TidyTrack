@@ -362,5 +362,10 @@ def version():
 
 @app.post("/update/code", include_in_schema=False)
 async def reloadCode():
+    global config
+    try:
+        config = settings.config.get_config()
+    except Exception as e:
+        print(e)
     subprocess.run(["git", "pull"])
     return Message(message="Updated!")
