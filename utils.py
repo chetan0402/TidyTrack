@@ -107,17 +107,17 @@ def getReport(db: Session, location: Union[str, None], from_time: int, to_time: 
     if location is None:
         return db.query(models.Report).filter(and_(
             models.Report.time.between(from_time, to_time),
-            models.Report.type == report_type.value)).offset(offset).limit(limit).all()
+            models.Report.type == report_type.value)).offset(offset*20).limit(limit).all()
     else:
         return db.query(models.Report).filter(and_(and_(
             models.Report.time.between(from_time, to_time),
             models.Report.type == report_type.value),
-            models.Report.location == location)).offset(offset).limit(limit).all()
+            models.Report.location == location)).offset(offset*20).limit(limit).all()
 
 
 def getReportFromUser(db: Session, token: str, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
     user = getUserFromToken(db, token)
-    return db.query(models.Report).filter(models.Report.user == user.id).offset(offset).limit(limit).all()
+    return db.query(models.Report).filter(models.Report.user == user.id).offset(offset*20).limit(limit).all()
 
 
 def saveIMG(img_string: str, local_path: str) -> None:
