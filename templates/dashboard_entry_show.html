@@ -13,6 +13,7 @@
             color: #EAEAEA;
         }
         .card{
+            display: flex;
             background: #494949;
             padding: 5px 10px;
             border-radius: 10px;
@@ -29,12 +30,14 @@
 <div>
     {% for row in data %}
         <div class="card" id="{{ row.ticket_id }}">
-            <p class="location">{{ row.location }}</p>
-            <p class="selected">{{ row.selected }}</p>
-            <p class="other">{{ row.other }}</p>
-            <p class="time">{{ convertTime(row.time) }}</p>
-            <p class="image-link"><a href="{{ row.img }}">Open Image</a></p>
-            <button onclick="taskIncomplete(this)">Set as Incomplete</button>
+            <img src="/img/{{ row.img }}" alt="">
+            <div>
+                <p class="location">{{ row.location }}</p>
+                <p class="selected">{{ row.selected }}</p>
+                <p class="other">{{ row.other }}</p>
+                <p class="time">{{ convertTime(row.time) }}</p>
+            </div>
+            <button onload="console.log('onload code')" onclick="taskIncomplete(this)">Set as Incomplete</button>
             <button onclick="taskComplete(this)">Set as Complete</button>
         </div>
     {% endfor %}
