@@ -54,6 +54,7 @@ class BaseReport(BaseModel):
     location: str
     selected: int
     other: str
+    rating: int
 
     class Config:
         from_attributes = True

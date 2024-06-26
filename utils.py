@@ -86,7 +86,8 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
         img=local_path,
         time=report_time,
         user=user.id,
-        type=report_type.value
+        type=report_type.value,
+        rating=report_element.rating
     )
     try:
         db.add(report)
