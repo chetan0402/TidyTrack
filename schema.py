@@ -99,3 +99,14 @@ class SweeperReport(BaseModel):
 class MyReportsRequest(BaseModel):
     token: str
     offset: int = 0
+
+
+class MyReportsResponse(BaseModel):
+    ticket_id: str
+    location: str
+    selected: str
+    other: str
+    img: str
+    time: int
+    type: int
+    rating: int
