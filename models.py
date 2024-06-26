@@ -55,6 +55,7 @@ class Report(Base):
     user = Column(String)
     type = Column(Integer)
     rating = Column(Integer)
+    status = Column(Integer)
 
 
 class SweeperRecords(Base):

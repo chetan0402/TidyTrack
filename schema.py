@@ -110,6 +110,7 @@ class MyReports(BaseModel):
     time: int
     type: int
     rating: int
+    status: int
 
 
 class MyReportsResponse(BaseModel):

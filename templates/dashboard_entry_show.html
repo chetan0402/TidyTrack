@@ -24,12 +24,20 @@
             font-weight: 500;
             font-style: normal;
         }
+        #pop-up-bg{
+            z-index: -1;
+            opacity: 0;
+        }
+        #pop-up{
+            z-index: -1;
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
 <div>
     {% for row in data %}
-        <div class="card" id="{{ row.ticket_id }}">
+        <div class="card" data-status="{{ row.status }}" id="{{ row.ticket_id }}">
             <img src="/img/{{ row.img }}" alt="">
             <div>
                 <p class="location">{{ row.location }}</p>
@@ -37,8 +45,8 @@
                 <p class="other">{{ row.other }}</p>
                 <p class="time">{{ convertTime(row.time) }}</p>
             </div>
-            <button onload="console.log('onload code')" onclick="taskIncomplete(this)">Set as Incomplete</button>
-            <button onclick="taskComplete(this)">Set as Complete</button>
+            <button class="changeButton incomplete" onclick="taskIncomplete(this)">Set as Incomplete</button>
+            <button class="changeButton complete" onclick="taskComplete(this)">Set as Complete</button>
         </div>
     {% endfor %}
 </div>
@@ -50,6 +58,18 @@
     </div>
 </div>
 <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        const reports=document.querySelectorAll(".card")
+        reports.forEach((report)=>{
+            if(report.dataset.status == 0){
+                report.querySelector(".incomplete").style.display="none"
+            }
+            if(report.dataset.status == 1){
+                report.querySelector(".complete").style.display="none"
+            }
+        })
+    })
+
     let token=""
     let taskID
     let toChange
