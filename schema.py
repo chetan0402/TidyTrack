@@ -115,3 +115,18 @@ class MyReports(BaseModel):
 
 class MyReportsResponse(BaseModel):
     reports: list[MyReports]
+
+
+class GraphDataRequest(BaseModel):
+    from_time: int
+    to_time: int
+    location: str
+
+
+class GraphData(BaseModel):
+    time: int
+    rating: int
+
+
+class GraphDataResponse(BaseModel):
+    data: list[GraphData]

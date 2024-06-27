@@ -164,6 +164,12 @@ def otherGet(request: Request, location: Union[str, None], from_time: int, to_ti
     })
 
 
+@app.post("/internet/graph", tags=["graph"], response_model=GraphData)
+def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.INTERNET)}
+
+
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
