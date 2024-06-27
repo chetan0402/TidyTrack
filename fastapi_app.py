@@ -170,6 +170,36 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
                               ReportType.INTERNET)}
 
 
+@app.post("/food/graph", tags=["graph"], response_model=GraphDataResponse)
+def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.FOOD)}
+
+
+@app.post("/washroom/graph", tags=["graph"], response_model=GraphDataResponse)
+def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.WASHROOM)}
+
+
+@app.post("/water/graph", tags=["graph"], response_model=GraphDataResponse)
+def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.WATER)}
+
+
+@app.post("/cleaning/graph", tags=["graph"], response_model=GraphDataResponse)
+def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.CLEANING)}
+
+
+@app.post("/other/graph", tags=["graph"], response_model=GraphDataResponse)
+def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.OTHER)}
+
+
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
