@@ -164,10 +164,10 @@ def otherGet(request: Request, location: Union[str, None], from_time: int, to_ti
     })
 
 
-@app.post("/internet/graph", tags=["graph"], response_model=GraphData)
+@app.post("/internet/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
-    return {"data": [GraphData.model_validate(data) for data in getReport(db, graph_request.location,
-            graph_request.from_time, graph_request.to_time,ReportType.INTERNET)]}
+    return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
+                              ReportType.INTERNET)}
 
 
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
