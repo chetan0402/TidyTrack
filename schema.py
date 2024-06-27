@@ -84,9 +84,15 @@ class ExceptionReturn(BaseModel):
 class Test(BaseModel):
     id: str
 
+    class Config:
+        from_attributes = True
+
 
 class ProfileRequest(BaseModel):
     token: str
+
+    class Config:
+        from_attributes = True
 
 
 class SweeperReport(BaseModel):
@@ -95,10 +101,16 @@ class SweeperReport(BaseModel):
     location: str
     img: str
 
+    class Config:
+        from_attributes = True
+
 
 class MyReportsRequest(BaseModel):
     token: str
     offset: int = 0
+
+    class Config:
+        from_attributes = True
 
 
 class MyReports(BaseModel):
@@ -112,9 +124,15 @@ class MyReports(BaseModel):
     rating: int
     status: int
 
+    class Config:
+        from_attributes = True
+
 
 class MyReportsResponse(BaseModel):
     reports: list[MyReports]
+
+    class Config:
+        from_attributes = True
 
 
 class GraphDataRequest(BaseModel):
@@ -122,11 +140,20 @@ class GraphDataRequest(BaseModel):
     to_time: int
     location: str
 
+    class Config:
+        from_attributes = True
+
 
 class GraphData(BaseModel):
     time: int
     rating: int
 
+    class Config:
+        from_attributes = True
+
 
 class GraphDataResponse(BaseModel):
     data: list[GraphData]
+
+    class Config:
+        from_attributes = True
