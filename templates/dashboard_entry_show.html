@@ -73,7 +73,7 @@
 <div>
     {% for row in data %}
         <div class="card" data-status="{{ row.status }}" id="{{ row.ticket_id }}">
-            <img src="/img/{{ row.img }}" alt="">
+            <img src="/img/{{ row.img.lower() }}" alt="">
             <div>
                 {{ row.location }}<br>{{ row.selected }}<br>{{ row.other }}<br>{{ convertTime(row.time) }}
             </div>

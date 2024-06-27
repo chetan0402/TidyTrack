@@ -77,7 +77,7 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
     local_path = ""
 
     if isinstance(report_element, WithImgReport):
-        local_path = f"{report_type.name}-{report_time}-{user.id}.png"
+        local_path = f"{report_type.name.lower()}-{report_time}-{user.id}.png"
     report = models.Report(
         ticket_id=report_element.id,
         location=report_element.location,
