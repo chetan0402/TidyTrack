@@ -18,6 +18,7 @@
             padding: 5px 10px;
             border-radius: 10px;
             height: fit-content;
+            margin: 5px;
         }
         .card>div{
             margin: 5px;
@@ -43,6 +44,7 @@
 			display:flex;
 			justify-content: center;
 			backdrop-filter: blur(2px);
+            background: rgb(0 0 0 / 40%);
         }
         #pop-up{
             z-index: -1;
@@ -52,6 +54,7 @@
 			font-family: 'Poppins',sans-serif;
 			padding: 5px 5px;
 			border-radius: 5px;
+            position:fixed;
         }
         button{
             height: fit-content;
@@ -113,7 +116,7 @@
         showPop(ele)
     }
     function showPop(ele){
-		document.getElementById("pop-up-bg").style.top=ele.getBoundingClientRect().top;
+		document.getElementById("pop-up").style.top=ele.getBoundingClientRect().top+"px";
         document.getElementById("pop-up-bg").style.opacity=1;
         document.getElementById("pop-up-bg").style.zIndex=1;
         document.getElementById("pop-up").style.opacity=1;
