@@ -142,10 +142,10 @@
     function confirmed(){
         fetch("https://tt.manit.ac.in/report/edit",{
             method: "POST",
-            body: {
+            body: JSON.stringify({
                 "ticket_id": taskID,
                 "status": toChange
-            }
+            })
         }).then(
             (res) => {
                 if(res.ok){
