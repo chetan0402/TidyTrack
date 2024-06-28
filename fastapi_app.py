@@ -200,6 +200,13 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
                               ReportType.OTHER)}
 
 
+@app.post("/report/edit")
+def reportEdit(report_edit_request: ReportEditRequest, db: Session = Depends(get_db)):
+    result = db.query(models.Report).filter(models.Report.ticket_id == report_edit_request.ticket_id).first()
+    result.status = report_edit_request.status
+    db.commit()
+
+
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message

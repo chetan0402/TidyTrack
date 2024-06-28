@@ -140,7 +140,26 @@
         document.getElementById("pop-up").style.zIndex=2;
     }
     function confirmed(){
-        fetch("https://tt.manit.ac.in/?taskid="+taskId+"&status="+toChange)
+        fetch("https://tt.manit.ac.in/report/edit",{
+            method: "POST",
+            payload: {
+                "ticket_id": taskID,
+                "status": toChange
+            }
+        }).then(
+            (res) => {
+                if(res.ok){
+                    if(toChange==1){
+                        document.getElementById("#"+taskID).querySelector(".incomplete").style.display="block";
+                        document.getElementById("#"+taskID).querySelector(".complete").style.display="none";
+                    }
+                    if(toChange==0){
+                        document.getElementById("#"+taskID).querySelector(".incomplete").style.display="none";
+                        document.getElementById("#"+taskID).querySelector(".complete").style.display="block";
+                    }
+                }
+            }
+        )
         closePop()
     }
     function closePop(){

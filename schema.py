@@ -157,3 +157,8 @@ class GraphDataResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class ReportEditRequest(BaseModel):
+    ticket_id: str
+    status: str
