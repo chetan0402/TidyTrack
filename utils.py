@@ -96,6 +96,11 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Please report to the developer.")
     if isinstance(report_element, WithImgReport):
         saveIMG(report_element.img, local_path)
+        if not imgExist(local_path):
+            print("===IMG-SAVE-FAIL===")
+            print(report_element.model_dump_json())
+            print("===================")
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
     db.refresh(report)
 
     return Message(message=report_element.id)
@@ -107,17 +112,17 @@ def getReport(db: Session, location: Union[str, None], from_time: int, to_time: 
     if location is None:
         return db.query(models.Report).filter(and_(
             models.Report.time.between(from_time, to_time),
-            models.Report.type == report_type.value)).offset(offset*20).limit(limit).all()
+            models.Report.type == report_type.value)).offset(offset * 20).limit(limit).all()
     else:
         return db.query(models.Report).filter(and_(and_(
             models.Report.time.between(from_time, to_time),
             models.Report.type == report_type.value),
-            models.Report.location == location)).offset(offset*20).limit(limit).all()
+            models.Report.location == location)).offset(offset * 20).limit(limit).all()
 
 
 def getReportFromUser(db: Session, token: str, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
     user = getUserFromToken(db, token)
-    return db.query(models.Report).filter(models.Report.user == user.id).offset(offset*20).limit(limit).all()
+    return db.query(models.Report).filter(models.Report.user == user.id).offset(offset * 20).limit(limit).all()
 
 
 def saveIMG(img_string: str, local_path: str) -> None:
@@ -135,3 +140,7 @@ def saveIMG(img_string: str, local_path: str) -> None:
         img_buffer.truncate()
 
     img.save(img_path, "PNG", quality=quality)
+
+
+def imgExist(local_path: str) -> bool:
+    return Path.home().joinpath("img").joinpath(local_path.lower()).exists()

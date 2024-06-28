@@ -60,6 +60,7 @@
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
+            top: 40vh;
         }
 		#pop-up>button{
 			margin: 5px;
@@ -77,10 +78,14 @@
 			font-weight: 400;
 			padding: 5px 5px;
         }
+		#emptyText{
+			display: none;
+		}
     </style>
 </head>
 <body>
 <div>
+	<h1 id="emptyText">No more entries...</h1>
     {% for row in data %}
         <div class="card" data-status="{{ row.status }}" id="{{ row.ticket_id }}">
             <img src="/img/{{ row.img.lower() }}" alt="">
@@ -102,6 +107,9 @@
 <script>
     document.addEventListener("DOMContentLoaded",()=>{
         const reports=document.querySelectorAll(".card")
+		if(reports.length==0){
+			document.getElementById("emptyText").style.display="block"
+		}
         reports.forEach((report)=>{
             if(report.dataset.status == 0){
                 report.querySelector(".incomplete").style.display="none"
@@ -126,7 +134,6 @@
         showPop(ele)
     }
     function showPop(ele){
-		document.getElementById("pop-up").style.top=ele.getBoundingClientRect().top+"px";
         document.getElementById("pop-up-bg").style.opacity=1;
         document.getElementById("pop-up-bg").style.zIndex=1;
         document.getElementById("pop-up").style.opacity=1;
