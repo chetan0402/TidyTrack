@@ -161,4 +161,4 @@ class GraphDataResponse(BaseModel):
 
 class ReportEditRequest(BaseModel):
     ticket_id: str
-    status: str
+    status: int
