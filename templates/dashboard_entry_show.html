@@ -142,7 +142,7 @@
     function confirmed(){
         fetch("https://tt.manit.ac.in/report/edit",{
             method: "POST",
-            payload: {
+            body: {
                 "ticket_id": taskID,
                 "status": toChange
             }
