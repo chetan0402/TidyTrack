@@ -153,12 +153,12 @@
             (res) => {
                 if(res.ok){
                     if(toChange==1){
-                        document.getElementById("#"+taskID).querySelector(".incomplete").style.display="block";
-                        document.getElementById("#"+taskID).querySelector(".complete").style.display="none";
+                        document.getElementById(taskID).querySelector(".incomplete").style.display="block";
+                        document.getElementById(taskID).querySelector(".complete").style.display="none";
                     }
                     if(toChange==0){
-                        document.getElementById("#"+taskID).querySelector(".incomplete").style.display="none";
-                        document.getElementById("#"+taskID).querySelector(".complete").style.display="block";
+                        document.getElementById(taskID).querySelector(".incomplete").style.display="none";
+                        document.getElementById(taskID).querySelector(".complete").style.display="block";
                     }
                 }
             }
