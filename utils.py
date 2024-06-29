@@ -17,9 +17,16 @@ from fastapi.exceptions import HTTPException
 from starlette import status
 from schema import *
 from typing import Union, Type
+from fastapi import Header, Depends
+from fastapi_app import get_db
 
 ExceptionReturnDocs = {"model": ExceptionReturn}
 ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
+
+
+def getUserInHeaderVerified(user_groups: list, authorization: str = Header(None), db: Session = Depends(get_db)) -> str:
+    if getUserFromToken(db, re.search(r"Bearer (\S+)", authorization).group(1)).usergroup in user_groups:
+        return re.search(r"Bearer (\S+)", authorization).group(1)
 
 
 def convertTime(timestamp: int) -> str:
