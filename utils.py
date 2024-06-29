@@ -87,6 +87,12 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
     report_time = int(time.time())
     local_path = ""
 
+    if report_type == constants.ReportType.ReportType.FOOD:
+        local_path = "food.png"
+    elif report_type == constants.ReportType.ReportType.WATER:
+        local_path = "water.png"
+    elif report_type == constants.ReportType.ReportType.OTHER:
+        local_path = "other.png"
     if isinstance(report_element, WithImgReport):
         local_path = f"{report_type.name.lower()}-{report_time}-{user.id}.png"
     report = models.Report(
