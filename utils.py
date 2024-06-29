@@ -24,7 +24,7 @@ ExceptionReturnDocs = {"model": ExceptionReturn}
 ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
 
 
-def getUserInHeaderVerified(user_groups: list, authorization: str = Header(None), db: Session = Depends(get_db)) -> str:
+async def getUserInHeaderVerified(user_groups: list, authorization: str = Header(None), db: Session = Depends(get_db)) -> str:
     if authorization is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Authorization Required")
     if getUserFromToken(db, re.search(r"Bearer (\S+)", authorization).group(1)).usergroup in user_groups:
