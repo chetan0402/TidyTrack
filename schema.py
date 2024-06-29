@@ -139,6 +139,7 @@ class GraphDataRequest(BaseModel):
     from_time: int
     to_time: int
     location: str
+    token: str
 
     class Config:
         from_attributes = True
@@ -162,3 +163,4 @@ class GraphDataResponse(BaseModel):
 class ReportEditRequest(BaseModel):
     ticket_id: str
     status: int
+    token: str

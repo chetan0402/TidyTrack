@@ -120,20 +120,20 @@
         })
     })
 
-    let token=""
+    let token={{ token }}
     let taskID
     let toChange
     function taskIncomplete(ele){
         toChange=0
         taskID = ele.parentNode.id
-        showPop(ele)
+        showPop()
     }
     function taskComplete(ele){
         toChange=1
         taskID = ele.parentNode.id
-        showPop(ele)
+        showPop()
     }
-    function showPop(ele){
+    function showPop(){
         document.getElementById("pop-up-bg").style.opacity=1;
         document.getElementById("pop-up-bg").style.zIndex=1;
         document.getElementById("pop-up").style.opacity=1;
@@ -147,7 +147,8 @@
             },
             body: JSON.stringify({
                 "ticket_id": taskID,
-                "status": toChange
+                "status": toChange,
+                "token": token
             })
         }).then(
             (res) => {

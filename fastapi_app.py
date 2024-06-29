@@ -104,97 +104,116 @@ def internetGet(request: Request, location: Union[str, None], from_time: int, to
 
 @app.get("/food/get", tags=["webview"])
 def foodGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
-            db: Session = Depends(get_db)):
+            db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
     return template.TemplateResponse(name="dashboard_entry_show.html", context={
         "request": request,
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.FOOD),
-        "convertTime": convertTime
+        "convertTime": convertTime,
+        "token": token
     })
 
 
 @app.get("/washroom/get", tags=["webview"])
 def washroomGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
-                db: Session = Depends(get_db)):
+                db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
     return template.TemplateResponse(name="dashboard_entry_show.html", context={
         "request": request,
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.WASHROOM),
-        "convertTime": convertTime
+        "convertTime": convertTime,
+        "token": token
     })
 
 
 @app.get("/water/get", tags=["webview"])
 def waterGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
-             db: Session = Depends(get_db)):
+             db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
     return template.TemplateResponse(name="dashboard_entry_show.html", context={
         "request": request,
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.WATER),
-        "convertTime": convertTime
+        "convertTime": convertTime,
+        "token": token
     })
 
 
 @app.get("/cleaning/get", tags=["webview"])
 def cleaningGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
-                db: Session = Depends(get_db)):
+                db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
     return template.TemplateResponse(name="dashboard_entry_show.html", context={
         "request": request,
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.CLEANING),
-        "convertTime": convertTime
+        "convertTime": convertTime,
+        "token": token
     })
 
 
 @app.get("/other/get", tags=["webview"])
 def otherGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
-             db: Session = Depends(get_db)):
+             db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
     return template.TemplateResponse(name="dashboard_entry_show.html", context={
         "request": request,
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.OTHER),
-        "convertTime": convertTime
+        "convertTime": convertTime,
+        "token": token
     })
 
 
 @app.post("/internet/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
                               ReportType.INTERNET)}
 
 
 @app.post("/food/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
                               ReportType.FOOD)}
 
 
 @app.post("/washroom/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
                               ReportType.WASHROOM)}
 
 
 @app.post("/water/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
                               ReportType.WATER)}
 
 
 @app.post("/cleaning/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
                               ReportType.CLEANING)}
 
 
 @app.post("/other/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
                               ReportType.OTHER)}
 
 
 @app.post("/report/edit")
 def reportEdit(report_edit_request: ReportEditRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, report_edit_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     result = db.query(models.Report).filter(models.Report.ticket_id == report_edit_request.ticket_id).first()
     result.status = report_edit_request.status
     db.commit()
