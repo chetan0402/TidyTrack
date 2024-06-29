@@ -24,11 +24,13 @@ ExceptionReturnDocs = {"model": ExceptionReturn}
 ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
 
 
-async def getUserInHeaderVerified(user_groups: list, authorization: str = Header(None), db: Session = Depends(get_db)) -> str:
-    if authorization is None:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Authorization Required")
-    if getUserFromToken(db, re.search(r"Bearer (\S+)", authorization).group(1)).usergroup in user_groups:
-        return re.search(r"Bearer (\S+)", authorization).group(1)
+def getUserInHeaderVerified(user_groups: list):
+    def dependency(authorization: str = Header(None), db: Session = Depends(get_db)) -> str:
+        if authorization is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Authorization Required")
+        if getUserFromToken(db, re.search(r"Bearer (\S+)", authorization).group(1)).usergroup in user_groups:
+            return re.search(r"Bearer (\S+)", authorization).group(1)
+    return dependency
 
 
 def convertTime(timestamp: int) -> str:
