@@ -12,18 +12,10 @@ from fastapi.staticfiles import StaticFiles
 
 import settings.config
 import models
-from database import SessionLocal
+from database import get_db
 from schema import *
 from utils import *
 from constants.ReportType import *
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 # TODO - implement validation rule

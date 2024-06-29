@@ -18,7 +18,7 @@ from starlette import status
 from schema import *
 from typing import Union, Type
 from fastapi import Header, Depends
-from fastapi_app import get_db
+from database import get_db
 
 ExceptionReturnDocs = {"model": ExceptionReturn}
 ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
