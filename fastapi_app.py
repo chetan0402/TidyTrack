@@ -16,6 +16,7 @@ from database import get_db
 from schema import *
 from utils import *
 from constants.ReportType import *
+from constants.tags import parseTags
 
 
 # TODO - implement validation rule
@@ -98,7 +99,9 @@ def internetGet(request: Request, location: Union[str, None], from_time: int, to
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.INTERNET),
         "convertTime": convertTime,
-        "token": token
+        "token": token,
+        "report_type": ReportType.INTERNET,
+        "parseTags": parseTags
     })
 
 
@@ -110,7 +113,9 @@ def foodGet(request: Request, location: Union[str, None], from_time: int, to_tim
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.FOOD),
         "convertTime": convertTime,
-        "token": token
+        "token": token,
+        "report_type": ReportType.FOOD,
+        "parseTags": parseTags
     })
 
 
@@ -122,7 +127,9 @@ def washroomGet(request: Request, location: Union[str, None], from_time: int, to
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.WASHROOM),
         "convertTime": convertTime,
-        "token": token
+        "token": token,
+        "report_type": ReportType.WASHROOM,
+        "parseTags": parseTags
     })
 
 
@@ -134,7 +141,9 @@ def waterGet(request: Request, location: Union[str, None], from_time: int, to_ti
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.WATER),
         "convertTime": convertTime,
-        "token": token
+        "token": token,
+        "report_type": ReportType.WATER,
+        "parseTags": parseTags
     })
 
 
@@ -146,7 +155,9 @@ def cleaningGet(request: Request, location: Union[str, None], from_time: int, to
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.CLEANING),
         "convertTime": convertTime,
-        "token": token
+        "token": token,
+        "report_type": ReportType.CLEANING,
+        "parseTags": parseTags
     })
 
 
@@ -158,7 +169,9 @@ def otherGet(request: Request, location: Union[str, None], from_time: int, to_ti
         "data": getReport(db, location, from_time, to_time, offset=offset,
                           report_type=ReportType.OTHER),
         "convertTime": convertTime,
-        "token": token
+        "token": token,
+        "report_type": ReportType.OTHER,
+        "parseTags": parseTags
     })
 
 
