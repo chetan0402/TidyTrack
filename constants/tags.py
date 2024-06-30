@@ -1,4 +1,4 @@
-from ReportType import ReportType
+from constants.ReportType import ReportType
 
 TAGS = {
     "food": {
