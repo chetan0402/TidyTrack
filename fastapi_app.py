@@ -407,7 +407,10 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
     422: ExceptionReturnDocs
 })
 def profile(profile_request: ProfileRequest, db: Session = Depends(get_db)):
-    return getUserFromToken(db, profile_request.token)
+    user = getUserFromToken(db, profile_request.token)
+    if user.usergroup in [3, 4]:
+        user.subgroup = getSubGroup(db, user.id)
+    return user
 
 
 @app.post("/reports", tags=["account"], response_model=MyReportsResponse)

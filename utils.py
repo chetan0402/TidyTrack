@@ -24,12 +24,17 @@ ExceptionReturnDocs = {"model": ExceptionReturn}
 ReportReturnDocs = {400: ExceptionReturnDocs, 403: ExceptionReturnDocs}
 
 
+def getSubGroup(db: Session, user_id: str):
+    return db.query(models.UserbaseAttr).filter(models.UserbaseAttr.id == user_id).first().subgroup
+
+
 def getUserInHeaderVerified(user_groups: list):
     def dependency(authorization: str = Header(None), db: Session = Depends(get_db)) -> str:
         if authorization is None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Authorization Required")
         if getUserFromToken(db, re.search(r"Bearer (\S+)", authorization).group(1)).usergroup in user_groups:
             return re.search(r"Bearer (\S+)", authorization).group(1)
+
     return dependency
 
 

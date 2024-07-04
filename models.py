@@ -67,3 +67,10 @@ class SweeperRecords(Base):
     late = Column(Boolean)
     time = Column(Integer)
     sweeper = Column(String)
+
+
+class UserbaseAttr(Base):
+    __tablename__ = "userbaseAttr"
+
+    id = Column(String(12), primary_key=True)
+    subgroup = Column(String(15))

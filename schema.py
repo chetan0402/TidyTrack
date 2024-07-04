@@ -2,19 +2,12 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-class AdminModel(BaseModel):
-    user: str
-    pswd: str
-
-    class Config:
-        from_attributes = True
-
-
 class UserbaseModel(BaseModel):
     name: str
     id: str
     phone: int
     usergroup: int
+    subgroup: str = ""
 
     class Config:
         from_attributes = True
