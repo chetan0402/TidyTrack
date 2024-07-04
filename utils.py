@@ -114,7 +114,8 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
     try:
         db.add(report)
         db.commit()
-    except IntegrityError:
+    except IntegrityError as err:
+        print(err)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Please report to the developer.")
     if isinstance(report_element, WithImgReport):
         saveIMG(report_element.img, local_path)
