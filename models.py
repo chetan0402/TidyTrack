@@ -73,4 +73,4 @@ class UserbaseAttr(Base):
     __tablename__ = "userbaseAttr"
 
     id = Column(String(12), primary_key=True)
-    subgroup = Column(String(15))
+    subgroup = Column(Integer)

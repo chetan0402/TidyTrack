@@ -7,7 +7,7 @@ class UserbaseModel(BaseModel):
     id: str
     phone: int
     usergroup: int
-    subgroup: str = ""
+    subgroup: int = -1
 
     class Config:
         from_attributes = True
