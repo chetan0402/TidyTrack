@@ -45,7 +45,7 @@ def notFound404():
 
 @app.get("/success")
 def success():
-    return FileResponse("templates/success.html")
+    return FileResponse("templates/mail-success.html")
 
 
 @app.get("/privacy")
