@@ -26,6 +26,7 @@ def isValidId(id: str) -> bool:
 
 app = FastAPI()
 app.mount("/img", StaticFiles(directory="img"), name="img")
+app.mount("/assets", StaticFiles(directory="templates/assets"), name="assets")
 template = Jinja2Templates(directory="templates")
 config = settings.config.get_config()
 if not config.loaded:
@@ -35,6 +36,26 @@ if not config.loaded:
 @app.get("/")
 def homePage():
     return FileResponse("templates/index.html")
+
+
+@app.get("/404")
+def notFound404():
+    return FileResponse("templates/404.html")
+
+
+@app.get("/success")
+def success():
+    return FileResponse("templates/success.html")
+
+
+@app.get("/privacy")
+def privacy():
+    return FileResponse("templates/privacy.html")
+
+
+@app.get("/terms")
+def terms():
+    return FileResponse("templates/terms.html")
 
 
 @app.post("/internet/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)

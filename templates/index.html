@@ -1,51 +1,870 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="zxx">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-    <title>TidyTrack | MANIT Bhopal</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Tidy Track</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png" />
+
+
+
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/LineIcons.3.0.css" />
+    <link rel="stylesheet" href="assets/css/animate.css" />
+    <link rel="stylesheet" href="assets/css/tiny-slider.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+    <link rel="stylesheet" href="assets/css/main.css" />
+
 </head>
-<body class="bg-gray-100 font-sans">
-    <nav class="bg-blue-500 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="text-white text-2xl font-bold">TidyTrack | MANIT Bhopal</div>
-            <ul class="flex space-x-4 text-white">
-              <li><a href="/privacy" class="hover:underline">Privacy</a></li>
-              <li><a href="/terms" class="hover:underline">TnC</a></li>
-              <li><a href="/download" class="hover:underline bg-white text-blue-500 px-3 py-1 rounded-full hover:bg-blue-500 hover:text-white">Download</a></li>
-            </ul>
+
+<body>
+   
+
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="preloader-inner">
+            <div class="preloader-icon">
+                <span></span>
+                <span></span>
+            </div>
         </div>
-    </nav>
+    </div>
+    <!-- /End Preloader -->
 
-    <main class="container mx-auto p-6 mt-6">
-        <h1 class="text-4xl font-bold text-gray-800">Introducing TidyTrack</h1>
-        <p class="text-gray-600 mt-4 text-lg">
-            <strong>Made by Chetan Sharma & Mannat Trivedi</strong><br>
-            At MANIT, we believe in fostering a clean and hygienic environment that's conducive to learning and well-being. We understand the importance of a spotless washroom, not just for comfort but for the overall health and satisfaction of our students. That's why we're thrilled to introduce TidyTrack, an innovative mobile app designed to empower every student to contribute to the cleanliness and hygiene of our beloved institution, Maulana Azad National Institute of Technology (MANIT).
-        </p>
+    <!-- Start Header Area -->
+    <header class="header navbar-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <div class="nav-inner">
+                        <!-- Start Navbar -->
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="index.html">
+                                <img src="assets/images/logo/white-logo.svg" alt="Logo">
+                            </a>
+                            <button class="navbar-toggler mobile-menu-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                                        <a href="index.html" class="active" aria-label="Toggle navigation">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#features" aria-label="Toggle navigation">Features</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#team" aria-label="Toggle navigation">Team</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#contact" aria-label="Toggle navigation">Contact Us</a>
+                                    </li>
+                                </ul>
+                            </div> <!-- navbar collapse -->
+                            <div class="button home-btn">
+                                <a href="mail-success.html" class="btn">Download</a>
+                            </div>
+                        </nav>
+                        <!-- End Navbar -->
+                    </div>
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </header>
+    <!-- End Header Area -->
 
-        <p class="text-gray-600 mt-4 text-lg">
-            TidyTrack isn't just another app; it's a commitment to maintaining the highest standards of cleanliness and hygiene across the MANIT campus. With TidyTrack, we put the power of cleanliness in your hands, making it easier than ever to ensure that our washrooms remain pristine.
-        </p>
+    <!-- Start Hero Area -->
+    <section class="hero-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="hero-content">
+                        <h4>Tidy Track</h4>
+                        <h1>Transform Your <br>Campus Experience
+                        </h1>
+                        <p>Welcome to Tidy Track, the essential app for MANIT students and staff to seamlessly report and resolve campus issues.</p>
+                        <div class="button">
+                            <a href="about-us.html" class="btn ">Download Tidy Track</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-12">
+                    <div class="hero-image wow fadeInRight" data-wow-delay=".4s">
+                        <img class="main-image" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjpopuzGF9VLUTON9RG7hVXL47tQ38YVbCOkZqArq9c15ey6LxfWDPOvSoJvaswqxskHB4YeHXmZobd4-_SE5wiagP5Cj3pvjhxy6hR4qDNskfJmBkOeLqVl1WneAy8LTbehvHzDBT7z42QfWXRD1Gt842BJFhMFM-duETAyZ6LiG2i9lASTdzUcrS9WXnw/s16000/Picsart_24-07-04_10-23-54-936.png" alt="#">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Area -->
 
-        <h2 class="text-2xl font-bold text-gray-800 mt-6">Key Features of TidyTrack</h2>
-        <ul class="text-gray-600 list-disc pl-6 mt-4">
-            <li class="text-lg">User-Friendly Reporting: TidyTrack allows you to report the cleanliness status of any washroom on campus with just a few taps. Whether it's a minor issue or a significant concern, your feedback is invaluable in helping us maintain a clean environment.</li>
-            <li class="text-lg">Real-Time Updates: Stay informed about the status of your reports. TidyTrack provides real-time updates on the progress of cleaning, ensuring that your concerns are addressed promptly.</li>
-            <li class="text-lg">Encourage Others: With TidyTrack, you can encourage your fellow students to actively report cleanliness issues as well. Together, we can create a culture of cleanliness and responsibility at MANIT.</li>
-            <li class="text-lg">Regular Cleaning Schedules: TidyTrack helps ensure that all washrooms on campus adhere to regular cleaning schedules, making sure they are always fresh and hygienic.</li>
-            <li class="text-lg">Rewards and Recognition: We believe that your efforts to keep MANIT clean deserve recognition. TidyTrack offers rewards and incentives for active users who contribute to the cleanliness of the campus.</li>
-        </ul>
+    <!-- Start Features Area -->
+    <section class="freatures section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-12">
+                    <div class="image wow fadeInLeft" data-wow-delay=".3s">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0cWXPMKmVfllWc0jDmld6pyqke1PtXUyMoQFALRfge16VlGEFdWbleB8LKpUOiF88fCf60SJT1I8s8nuP6DYH11ZuJVan3Dx6gbobE1qwU0vCHp-gvlenRmuOtZtLz1mpM5NlcHDOjoxRMOyXp5xUJ12AibvxlMpREwcp2iNkRnWKldcHwchpOhepkEzF/s16000/Picsart_24-07-04_10-28-22-252.jpg" alt="#">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <div class="content">
+                        <h3 class="heading wow fadeInUp" data-wow-delay=".5s"><span>Core Features</span>Transforming Campus Life with Tidy Track</h3>
+                        <!-- Start Single Feature -->
+                        <div class="single-feature wow fadeInUp" data-wow-delay=".6s">
+                            <div class="f-icon">
+                                <i class="lni lni-checkmark-circle"></i>
+                            </div>
+                            <h4>Efficient Issue Reporting</h4>
+                            <p>Quickly report issues related to food, water, electricity, internet, and cleanliness with just a few taps.</p>
+                        </div>
+                        <!-- End Single Feature -->
+                        <!-- Start Single Feature -->
+                        <div class="single-feature wow fadeInUp" data-wow-delay=".7s">
+                            <div class="f-icon">
+                                <i class="lni lni-pencil-alt"></i>
+                            </div>
+                            <h4>Detailed Reporting</h4>
+                            <p>Attach images and provide detailed descriptions to ensure issues are clearly communicated and addressed promptly.</p>
+                        </div>
+                        <!-- End Single Feature -->
+                        <!-- Start Single Feature -->
+                        <div class="single-feature wow fadeInUp" data-wow-delay="0.8s">
+                            <div class="f-icon">
+                                <i class="lni lni-text-format"></i>
+                            </div>
+                            <h4>Seamless User Experience</h4>
+                            <p>Enjoy a smooth, intuitive interface designed for effortless navigation and usability.</p>
+                        </div>
+                        <!-- End Single Feature -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Features Area -->
 
-        <p class="text-gray-600 mt-6 text-lg">
-            With TidyTrack, we aim to create a cleaner, healthier, and more pleasant environment for every student at MANIT. It's not just an app; it's a shared responsibility that empowers us all to make a difference.
-        </p>
+    <!-- Start Services Area -->
+    <div class="services section" id="features">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">What we offer</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Report and Resolve Campus Issues with Ease</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">Easily report issues related to various aspects of campus life and help maintain a smooth and efficient environment at MANIT.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-shovel"></i>
+                        </div>
+                        <h4 class="text-title">Hygiene and Cleanliness</h4>
+                        <p>Report any washroom hygiene issues or cleanliness concerns around the campus. Keep your surroundings clean and comfortable.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-pizza"></i>
+                        </div>
+                        <h4 class="text-title">Food-Related Issues</h4>
+                        <p>Quickly report any concerns about the mess food quality, hygiene, or availability. Help us ensure you always have a satisfying meal experience.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-signal"></i>
+                        </div>
+                        <h4 class="text-title">Internet Connectivity</h4>
+                        <p>Report problems with campus internet connectivity to ensure a reliable online experience for studying and communication.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".2s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-book"></i>
+                        </div>
+                        <h4 class="text-title">General Maintenance</h4>
+                        <p>Report any other campus maintenance issues that don't fit into the specific categories above.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-bolt"></i>
+                        </div>
+                        <h4 class="text-title">Basic Needs</h4>
+                        <p>Report water supply and electricity issues to ensure your essential needs are met without disruption.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
+                    <div class="single-service">
+                        <div class="main-icon">
+                            <i class="lni lni-dinner"></i>
+                        </div>
+                        <h4 class="text-title">Predictive Meal Planning</h4>
+                        <p>Indicate your meal preferences for lunch, dinner, snacks, and breakfast to help optimize food preparation and reduce waste.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Services Area -->
 
-        <p class="text-gray-600 mt-4 text-lg">
-            Join us in the mission to maintain a pristine MANIT campus, and let's work together to ensure that our washrooms are always a source of pride. Download TidyTrack today and be part of the clean revolution at MANIT!
-        </p>
-    </main>
+   
+
+    <!-- Start Intro Video Area -->
+    <section class="intro-video-area section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="inner-content-head">
+                        <div class="inner-content">
+                            <img class="shape1" src="assets/images/video/shape1.svg" alt="#">
+                            <img class="shape2" src="assets/images/video/shape2.svg" alt="#">
+                            <div class="section-title">
+                                <span class="wow zoomIn" data-wow-delay=".2s">How It Works</span>
+                                <h2 class="wow fadeInUp" data-wow-delay=".4s">See Tidy Track in Action</h2>
+                                <p class="wow fadeInUp" data-wow-delay=".6s">Watch our quick walkthrough video to see how Tidy Track makes reporting and resolving campus issues effortless. From submitting your first report to tracking its resolution, this video covers all the essential features.</p>
+                            </div>
+                            <div class="intro-video-play" >
+                                <div class="play-thumb wow zoomIn" data-wow-delay=".2s">
+                                    <a class="popup-youtube" href="https://www.youtube.com/watch?v=i-OHPBCjxz4"><i class="lni lni-play"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Intro Video Area -->
+
+    <!-- Start Team Area -->
+    <section class="team section" id="team">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Meet Our Team</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s">The Minds Behind Tidy Track</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">Our passionate and skilled team is dedicated to making your campus experience better. Get to know the people who are working tirelessly to bring you the best reporting and resolution app for MANIT.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-12 wow fadeInUp" data-wow-delay=".3s">
+                    <!-- Start Single Team -->
+                    <div class="single-team">
+                        <div class="team-image">
+                            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjtqrUXBGilLqtf-P6iTCxD4eXLjjGKDX-eqN1jMVxRNSFiq54P5el8MhWsut92uawiK33XXHRSXRdYAGzM941buARZk9v5weuBzDoS3LcaQl3icWbyxRd9LNwIdZGCCOu2gs-Nh1TCOeRyBpCo9ylKtJJIh_Hpa5ukgis9XooW9e-N7uh-feMcLw7PE39D/s16000/Picsart_24-07-03_23-11-30-467-min.jpg" alt="#">
+                        </div>
+                        <div class="content">
+                            <h4>Prof. Bholanath Roy
+                                <span>Project Mentor</span>
+                            </h4>
+                            <ul class="social">
+                                <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-instagram"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-twitter-original"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-linkedin-original"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Single Team -->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12 wow fadeInUp" data-wow-delay=".5s">
+                    <!-- Start Single Team -->
+                    <div class="single-team">
+                        <div class="team-image">
+                            <img src="https://media.licdn.com/dms/image/D4D03AQGJfV4lFPhB4w/profile-displayphoto-shrink_400_400/0/1711375963938?e=1725494400&v=beta&t=YqJh-zqVuiHm82Z-_fVMmGlC56PXSX58Wv7GcmrwlPA" alt="#">
+                        </div>
+                        <div class="content">
+                            <h4>Mannat Trivedi
+                                <span>Android Developer and UI/UX Designer</span>
+                            </h4>
+                            <ul class="social">
+                                <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-instagram"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-twitter-original"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-linkedin-original"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Single Team -->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12 wow fadeInUp" data-wow-delay=".7s">
+                    <!-- Start Single Team -->
+                    <div class="single-team">
+                        <div class="team-image">
+                            <img src="https://media.licdn.com/dms/image/D4E03AQEPm9souYsEGg/profile-displayphoto-shrink_800_800/0/1709295669025?e=1725494400&v=beta&t=dVv_TweFyqInDLJlw5UQTCfHEqeWGsMXZqdaZI4W2Xk" alt="#">
+                        </div>
+                        <div class="content">
+                            <h4>Chetan Sharma
+                                <span>Backend and API Developer</span>
+                            </h4>
+                            <ul class="social">
+                                <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-instagram"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-twitter-original"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-linkedin-original"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Single Team -->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12 wow fadeInUp" data-wow-delay=".9s">
+                    <!-- Start Single Team -->
+                    <div class="single-team">
+                        <div class="team-image">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWhBHSMEY1Pa5xcGH5Pj2HLZOPlfyraJ0STQ&s" alt="#">
+                        </div>
+                        <div class="content">
+                            <h4>Central Computing Facility
+                                <span></span>
+                            </h4>Project Host
+                            <ul class="social">
+                                <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-instagram"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-twitter-original"></i></a></li>
+                                <li><a href="javascript:void(0)"><i class="lni lni-linkedin-original"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- End Single Team -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/ End Team Area -->
+
+    <!-- 
+    <section class="testimonials style2 section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Customer Reviews</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Our Testimonials</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">There are many variations of passages of Lorem
+                            Ipsum available, but the majority have suffered alteration in some form.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row testimonial-slider">
+                <div class="col-lg-6 col-12 ">
+                   
+                    <div class="single-testimonial">
+                        <div class="inner-content">
+                            <div class="quote-icon">
+                                <i class="lni lni-quotation"></i>
+                            </div>
+                            <div class="text">
+                                <p>“A vast number of clients decide to create dedicated software is the
+                                    online store. It is nothing but a website with a catalog of products and the
+                                    possibility.”</p>
+                            </div>
+                            <div class="author">
+                                <img src="https://via.placeholder.com/100x100" alt="#">
+                                <h4 class="name">Somalia D Silva
+                                    <span class="deg">Business Manager</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 ">
+                    <div class="single-testimonial">
+                        <div class="inner-content">
+                            <div class="quote-icon">
+                                <i class="lni lni-quotation"></i>
+                            </div>
+                            <div class="text">
+                                <p>“A vast number of clients decide to create dedicated software is the
+                                    online store. It is nothing but a website with a catalog of products and the
+                                    possibility.”</p>
+                            </div>
+                            <div class="author">
+                                <img src="https://via.placeholder.com/100x100" alt="#">
+                                <h4 class="name">David Warner
+                                    <span class="deg">Web Developer</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-12 ">
+                    <div class="single-testimonial">
+                        <div class="inner-content">
+                            <div class="quote-icon">
+                                <i class="lni lni-quotation"></i>
+                            </div>
+                            <div class="text">
+                                <p>“A vast number of clients decide to create dedicated software is the
+                                    online store. It is nothing but a website with a catalog of products and the
+                                    possibility.”</p>
+                            </div>
+                            <div class="author">
+                                <img src="https://via.placeholder.com/100x100" alt="#">
+                                <h4 class="name">Jems Gilario
+                                    <span class="deg">Graphics Designer</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 ">
+                    <div class="single-testimonial">
+                        <div class="inner-content">
+                            <div class="quote-icon">
+                                <i class="lni lni-quotation"></i>
+                            </div>
+                            <div class="text">
+                                <p>“A vast number of clients decide to create dedicated software is the
+                                    online store. It is nothing but a website with a catalog of products and the
+                                    possibility.”</p>
+                            </div>
+                            <div class="author">
+                                <img src="https://via.placeholder.com/100x100" alt="#">
+                                <h4 class="name">David Warner
+                                    <span class="deg">Web Developer</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 ">
+                    <div class="single-testimonial">
+                        <div class="inner-content">
+                            <div class="quote-icon">
+                                <i class="lni lni-quotation"></i>
+                            </div>
+                            <div class="text">
+                                <p>“A vast number of clients decide to create dedicated software is the
+                                    online store. It is nothing but a website with a catalog of products and the
+                                    possibility.”</p>
+                            </div>
+                            <div class="author">
+                                <img src="https://via.placeholder.com/100x100" alt="#">
+                                <h4 class="name">Jems Gilario
+                                    <span class="deg">Graphics Designer</span>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   Area -->
+
+    <!-- 
+    <section class="blog-section section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Blogs</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Our Latest News</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">There are many variations of passages of Lorem
+                            Ipsum available, but the majority have suffered alteration in some form.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".4s">
+                    <div class="single-blog-grid">
+                        <div class="blog-img">
+                            <a href="blog-single.html">
+                                <img src="https://via.placeholder.com/500x310" alt="#">
+                            </a>
+                        </div>
+                        <div class="blog-content">
+                            <div class="meta-info">
+                                <a class="date" href="javascript:void(0)"><i class="lni lni-timer"></i> 10 June 2023
+                                </a>
+                                <a class="author" href="javascript:void(0)"><i class="lni lni-user"></i> Anjelio Joly
+                                </a>
+                            </div>
+                            <h4>
+                                <a href="blog-single.html">Branding Involves Developing a Strategy to Creating.</a>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, adipscing elitr, sit gifted sed diam nonumy eirmod tempor
+                                ividunt dolore.</p>
+                            <div class="button">
+                                <a href="blog-single.html" class="btn">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".6s">
+                    <div class="single-blog-grid">
+                        <div class="blog-img">
+                            <a href="blog-single.html">
+                                <img src="https://via.placeholder.com/500x310" alt="#">
+                            </a>
+                        </div>
+                        <div class="blog-content">
+                            <div class="meta-info">
+                                <a class="date" href="javascript:void(0)"><i class="lni lni-timer"></i> 5 Aug 2023
+                                </a>
+                                <a class="author" href="javascript:void(0)"><i class="lni lni-user"></i> Kumila ksusi
+                                </a>
+                            </div>
+                            <h4>
+                                <a href="blog-single.html">Design is a Plan or The Construction of an
+                                    Object.</a>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, adipscing elitr, sit gifted sed diam nonumy eirmod tempor
+                                ividunt dolore.</p>
+                            <div class="button">
+                                <a href="blog-single.html" class="btn">Read Blog</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12 wow fadeInUp" data-wow-delay=".8s">
+                    <div class="single-blog-grid">
+                        <div class="blog-img">
+                            <a href="blog-single.html">
+                                <img src="https://via.placeholder.com/500x310" alt="#">
+                            </a>
+                        </div>
+                        <div class="blog-content">
+                            <div class="meta-info">
+                                <a class="date" href="javascript:void(0)"><i class="lni lni-timer"></i> 25 Dec 2023
+                                </a>
+                                <a class="author" href="javascript:void(0)"><i class="lni lni-user"></i> Alex Jendro
+                                </a>
+                            </div>
+                            <h4>
+                                <a href="blog-single.html">The Data-Driven Approach to Understanding.</a>
+                            </h4>
+                            <p>Lorem ipsum dolor sit amet, adipscing elitr, sit gifted sed diam nonumy eirmod tempor
+                                ividunt dolore.</p>
+                            <div class="button">
+                                <a href="blog-single.html" class="btn">Read Blog</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    End Blog Section Area -->
+
+    <!-- Start Faq Area -->
+    <section class="faq section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Do you have any doubts?</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Frequently asked questions</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">Explore answers to common queries about our app, including troubleshooting, features, and how to get support. If you have additional questions, feel free to reach out to us through the "Contact Us" option on our website.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-12 col-12">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading1">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                    <span class="title">What is Tidy Track?</span><i
+                                        class="lni lni-plus"></i>
+                                </button>
+                            </h2>
+                            <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="heading1"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>Tidy Track is an app designed for MANIT students and staff to report campus issues such as food, hygiene, water, electricity, and internet problems. It allows users to submit reports, track their status, and ensure timely resolutions.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading2">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                    <span class="title">Can I use Tidy Track if I am a staff member?</span><i
+                                        class="lni lni-plus"></i>
+                                </button>
+                            </h2>
+                            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>Yes, Tidy Track is designed for both students and staff at MANIT. Staff members can sign up and report issues relevant to their responsibilities and roles on campus.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading3">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                    <span class="title">How do I report an issue using Tidy Track?</span><i
+                                        class="lni lni-plus"></i>
+                                </button>
+                            </h2>
+                            <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <p>After logging in, navigate to the relevant section (Mess, Washroom, Water & Electricity, Internet, etc.) and fill out the report form. You can describe the issue, attach an image, and submit your report. You will receive updates on the status of your report through the app.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 col-12 xs-margin">
+                    <div class="accordion" id="accordionExample2">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading11">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse11" aria-expanded="false" aria-controls="collapse11">
+                                    <span class="title">How does Tidy Track handle the reports?</span><i class="lni lni-plus"></i>
+                                </button>
+                            </h2>
+                            <div id="collapse11" class="accordion-collapse collapse" aria-labelledby="heading11"
+                                data-bs-parent="#accordionExample2">
+                                <div class="accordion-body">
+                                    <p>Once a report is submitted, it is sent to the relevant department or staff member for review and action. You can track the progress of your report through the app and receive notifications about its status until it is resolved.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading22">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse22" aria-expanded="false" aria-controls="collapse22">
+                                    <span class="title">How can I change my login information?</span><i class="lni lni-plus"></i>
+                                </button>
+                            </h2>
+                            <div id="collapse22" class="accordion-collapse collapse" aria-labelledby="heading22"
+                                data-bs-parent="#accordionExample2">
+                                <div class="accordion-body">
+                                    <p>To change your login information, please contact the admin directly through the "Contact Us" option available on the official website.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading33">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse33" aria-expanded="false" aria-controls="collapse33">
+                                    <span class="title">Do I get the updates for the app?</span><i class="lni lni-plus"></i>
+                                </button>
+                            </h2>
+                            <div id="collapse33" class="accordion-collapse collapse" aria-labelledby="heading33"
+                                data-bs-parent="#accordionExample2">
+                                <div class="accordion-body">
+                                    <p>You will receive an update available message within the app whenever a new update is available, along with a download option to update your app.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/ End Faq Area -->
+
+    <!-- Start Call Action Area -->
+    <section class="call-action">
+        <div class="container">
+            <div class="inner-content">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-md-7 col-12">
+                        <div class="text">
+                            <h2>Download Tidy Track Now &
+                                <br>Join The Clean Revolution.
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-5 col-12">
+                        <div class="button">
+                            <a href="pricing.html" class="btn"><i class="lni lni-download"></i> Download Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Call Action Area -->
+
+    <!-- Start Footer Area -->
+    <footer class="footer section">
+        <!-- Start Footer Top -->
+        <div class="footer-top">
+            <div class="container">
+                <div class="inner-content">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <!-- Single Widget -->
+                            <div class="single-footer f-about">
+                                <div class="logo">
+                                    <a href="index.html">
+                                        <img src="assets/images/logo/white-logo.svg" alt="#">
+                                    </a>
+                                </div>
+                                <p>Making MANIT a better place through your constant support.</p>
+                                <h4 class="social-title">Follow Us On:</h4>
+                                <ul class="social">
+                                    <li><a href="javascript:void(0)"><i class="lni lni-facebook-filled"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="lni lni-instagram"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="lni lni-twitter-original"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="lni lni-linkedin-original"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="lni lni-pinterest"></i></a></li>
+                                    <li><a href="javascript:void(0)"><i class="lni lni-youtube"></i></a></li>
+                                </ul>
+                            </div>
+                            <!-- End Single Widget -->
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-12">
+                            <!-- Single Widget -->
+                            <div class="single-footer f-link">
+                                <h3>Explore</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Privacy Policy</a></li>
+                                    <li><a href="javascript:void(0)">Terms and Conditions</a></li>
+                                </ul>
+                            </div>
+                            <!-- End Single Widget -->
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-12">
+                            <!-- Single Widget -->
+                            <div class="single-footer f-link">
+                                <h3>Support</h3>
+                                <ul>
+                                    <li><a href="javascript:void(0)">Documentation</a></li>
+                                </ul>
+                            </div>
+                            <!-- End Single Widget -->
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <!-- Single Widget -->
+                            <div class="single-footer newsletter" id="contact">
+                                <h3>Contact Us</h3>
+                                <p>Have questions or need assistance? Reach out to us:</p>
+                                <form action="#" method="get" target="_blank" class="newsletter-form">
+                                    <input name="EMAIL" placeholder="Email address" required="required" type="email">
+                                    <div class="button">
+                                        <button class="sub-btn"><i class="lni lni-envelope"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- End Single Widget -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ End Footer Top -->
+        <!-- Start Copyright Area -->
+        <div class="copyright-area">
+            <div class="container">
+                <div class="inner-content">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <p class="copyright-text">© 2023 Tidy Track - All Rights Reserved</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <p class="copyright-owner">Hosted & Maintained By CCF, MANIT</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Copyright Area -->
+    </footer>
+    <!--/ End Footer Area -->
+
+    <!-- ========================= scroll-top ========================= -->
+    <a href="#" class="scroll-top">
+        <i class="lni lni-chevron-up"></i>
+    </a>
+
+    <!-- ========================= JS here ========================= -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/wow.min.js"></script>
+    <script src="assets/js/tiny-slider.js"></script>
+    <script src="assets/js/glightbox.min.js"></script>
+    <script src="assets/js/count-up.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+
+        //========= testimonial 
+        tns({
+            container: '.testimonial-slider',
+            items: 3,
+            slideBy: 'page',
+            autoplay: false,
+            mouseDrag: true,
+            gutter: 0,
+            nav: true,
+            controls: false,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                540: {
+                    items: 1,
+                },
+                768: {
+                    items: 2,
+                },
+                992: {
+                    items: 2,
+                },
+                1170: {
+                    items: 3,
+                }
+            }
+        });
+
+        //====== counter up 
+        var cu = new counterUp({
+            start: 0,
+            duration: 2000,
+            intvalues: true,
+            interval: 100,
+            append: " ",
+        });
+        cu.start();
+
+        //========= glightbox
+        $(document).ready(function() {
+            $('.popup-youtube').magnificPopup({
+                type: 'iframe',
+                iframe: {
+                    patterns: {
+                        youtube: {
+                            index: 'youtube.com/',
+                            id: 'v=',
+                            src: 'https://www.youtube.com/embed/%id%?autoplay=1'
+                        }
+                    },
+                    srcAction: 'iframe_src'
+                }
+            });
+        });
+
+    </script>
+  
+
 </body>
-</html>
 
+</html>
