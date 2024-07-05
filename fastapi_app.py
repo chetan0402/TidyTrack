@@ -451,7 +451,7 @@ def messLocation():
 
 @app.get("/download")
 def download():
-    return FileResponse(config.LATEST_APP_PATH)
+    return FileResponse(config.LATEST_APP_PATH,filename="TidyTrack.apk",media_type="application/vnd.android.package-archive")
 
 
 @app.get("/version")
