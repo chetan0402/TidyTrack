@@ -42,7 +42,7 @@
                 <td>{{ ticket.ticket_id }}</td>
                 <td>{{ ", ".join(parseTags(ticket.selected,report_type)) }}</td>
                 <td>{{ ticket.other }}</td>
-                <td>{{ ticket.time }}</td>
+                <td>{{ convertTime(ticket.time) }}</td>
                 <td>{{ ticket.user }}</td>
                 <td>{{ ticket.rating }}</td>
                 <td>{{ ticket.status }}</td>
