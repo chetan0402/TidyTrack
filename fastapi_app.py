@@ -263,12 +263,15 @@ def generateReport(generate_report_request: GenerateReportRequest, db: Session =
 @app.get("/printReport/{report_id}")
 def printReport(request: Request, report_id: str, db: Session = Depends(get_db)):
     all_data = getGenReport(db, report_id)
+    if len(all_data) == 0:
+        return Message(message="Empty Report")
     return template.TemplateResponse(name="generate_report.html", context={
         "data": all_data,
         "convertTime": convertTime,
-        "reportType": ReportType,
         "time_rn": int(time.time()),
-        "request": request
+        "request": request,
+        "location": all_data[0].location,
+        "report_type": ReportType(all_data[0].type).name
     })
 
 

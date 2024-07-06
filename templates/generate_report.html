@@ -9,8 +9,8 @@
         <button onclick="document.window.print()">Print</button>
     </div>
     <h1>Report</h1>
-    <h2>Location:- {{ data[0].location }}</h2>
-    <h2>Report Type:- {{ ReportType(data[0].type).name }}</h2>
+    <h2>Location:- {{ location }}</h2>
+    <h2>Report Type:- {{ report_type }}</h2>
     <p>Report generated on {{ convertTime(time_rn) }}</p>
     <table>
         <thead>
