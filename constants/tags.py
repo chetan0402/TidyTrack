@@ -11,6 +11,12 @@ TAGS = {
         17: "snacks",
         19: "dinner"
     },
+    "internet":{
+        2: "slow internet speed",
+        3: "wifi down",
+        5: "unable to connect",
+        7: "other"
+    },
     "washroom": {
         2: "cleanliness",
         3: "plumbing or maintenance",
