@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from pathlib import Path
@@ -168,3 +170,47 @@ def saveIMG(img_string: str, local_path: str) -> None:
 
 def imgExist(local_path: str) -> bool:
     return Path.home().joinpath("img").joinpath(local_path.lower()).exists()
+
+
+def entryReport(db: Session, generate_report_request: GenerateReportRequest):
+    user = getUserFromToken(db, generate_report_request.token)
+    if user.usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Group mismatch")
+
+    report_gen_element = models.ReportPara(
+        report_id=str(uuid.uuid4()),
+        from_time=generate_report_request.from_time,
+        to_time=generate_report_request.to_time,
+        location=generate_report_request.location,
+        report_type=generate_report_request.report_type,
+        expiry=int(time.time()) + 3600
+    )
+    db.add(report_gen_element)
+    db.commit()
+    db.refresh(report_gen_element)
+
+    return Message(message=report_gen_element.report_id)
+
+
+def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]]:
+    if not validUUID(report_id):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid UUID")
+    report_gen_element = db.query(models.ReportPara).filter(models.ReportPara.report_id == report_id).first()
+    if report_gen_element is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
+    if report_gen_element.expiry < int(time.time()):
+        db.query(models.ReportPara).filter(models.ReportPara.report_id == report_id).delete()
+        db.commit()
+        raise HTTPException(status_code=status.HTTP_410_GONE, detail="Report expired")
+
+    all_data = db.query(models.Report).filter(
+        and_(
+            and_(
+                models.Report.time.between(report_gen_element.from_time, report_gen_element.to_time),
+                models.Report.location == report_gen_element.location
+            ),
+            models.Report.type == report_gen_element.report_type
+        )
+    ).all()
+
+    return all_data

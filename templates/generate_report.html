@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+</head>
+<body>
+    <div>
+        <button onclick="document.window.print()">Print</button>
+    </div>
+    <h1>Report</h1>
+    <h2>Location:- {{ data[0].location }}</h2>
+    <h2>Report Type:- {{ ReportType(data[0].type).name }}</h2>
+    <p>Report generated on {{ convertTime(time_rn) }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticket ID</th>
+                <th>Selected</th>
+                <th>Feedback</th>
+                <th>DateTime</th>
+                <th>User</th>
+                <th>Rating</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.ticket_id }}</td>
+                <td>{{ ticket.selected }}</td>
+                <td>{{ ticket.other }}</td>
+                <td>{{ ticket.time }}</td>
+                <td>{{ ticket.user }}</td>
+                <td>{{ ticket.rating }}</td>
+                <td>{{ ticket.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

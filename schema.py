@@ -157,3 +157,14 @@ class ReportEditRequest(BaseModel):
     ticket_id: str
     status: int
     token: str
+
+
+class GenerateReportRequest(BaseModel):
+    token: str
+    location: str
+    from_time: int
+    to_time: int
+    report_type: int
+
+    class Config:
+        from_attributes = True

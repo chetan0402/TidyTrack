@@ -74,3 +74,14 @@ class UserbaseAttr(Base):
 
     id = Column(String(12), primary_key=True)
     subgroup = Column(Integer)
+
+
+class ReportPara(Base):
+    __tablename__ = "reportPara"
+
+    report_id = Column(String(36), primary_key=True)
+    from_time = Column(Integer)
+    to_time = Column(Integer)
+    location = Column(String)
+    report_type = Column(Integer)
+    expiry = Column(Integer)

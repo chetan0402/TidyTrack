@@ -253,6 +253,23 @@ def reportEdit(report_edit_request: ReportEditRequest, db: Session = Depends(get
     db.commit()
 
 
+@app.post("/generateReport")
+def generateReport(generate_report_request: GenerateReportRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, generate_report_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    return entryReport(db, generate_report_request)
+
+@app.post("/printReport/{report_id}")
+def printReport(report_id: str, db: Session = Depends(get_db)):
+    all_data = getGenReport(db, report_id)
+    return template.TemplateResponse(name="report.html", context={
+        "data": all_data,
+        "convertTime": convertTime,
+        "reportType": ReportType,
+        "time_rn": int(time.time())
+    })
+
+
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
@@ -451,7 +468,8 @@ def messLocation():
 
 @app.get("/download")
 def download():
-    return FileResponse(config.LATEST_APP_PATH,filename="TidyTrack.apk",media_type="application/vnd.android.package-archive")
+    return FileResponse(config.LATEST_APP_PATH, filename="TidyTrack.apk",
+                        media_type="application/vnd.android.package-archive")
 
 
 @app.get("/version")
