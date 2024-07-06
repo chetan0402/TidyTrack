@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table{
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
     <div>
-        <button onclick="document.window.print()">Print</button>
+        <button onclick="window.print()">Print</button>
     </div>
     <h1>Report</h1>
     <h2>Location:- {{ location }}</h2>
