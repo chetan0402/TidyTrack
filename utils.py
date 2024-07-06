@@ -193,15 +193,13 @@ def entryReport(db: Session, generate_report_request: GenerateReportRequest):
 
 
 def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]]:
+    db.query(models.ReportPara).filter(models.ReportPara.expiry < int(time.time())).delete()
+    db.commit()
     if not validUUID(report_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid UUID")
     report_gen_element = db.query(models.ReportPara).filter(models.ReportPara.report_id == report_id).first()
     if report_gen_element is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
-    if report_gen_element.expiry < int(time.time()):
-        db.query(models.ReportPara).filter(models.ReportPara.report_id == report_id).delete()
-        db.commit()
-        raise HTTPException(status_code=status.HTTP_410_GONE, detail="Report expired")
 
     all_data = db.query(models.Report).filter(
         and_(
