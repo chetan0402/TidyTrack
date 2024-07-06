@@ -40,7 +40,7 @@
             {% for ticket in data %}
             <tr>
                 <td>{{ ticket.ticket_id }}</td>
-                <td>{{ parseTags(ticket.selected,report_type).__str__()[1:-1] }}</td>
+                <td>{{ ", ".join(parseTags(ticket.selected,report_type)) }}</td>
                 <td>{{ ticket.other }}</td>
                 <td>{{ ticket.time }}</td>
                 <td>{{ ticket.user }}</td>
