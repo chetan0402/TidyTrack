@@ -96,7 +96,7 @@
         <div class="card" data-status="{{ row.status }}" id="{{ row.ticket_id }}">
             <img src="/img/{{ row.img.lower() }}" alt="">
             <div>
-                {{ row.location }}<br>{{ str(parseTags(row.selected,report_type))[1:-1] }}<br>{{ row.other }}<br>{{ convertTime(row.time) }}
+                {{ row.location }}<br>{{ ", ".join(parseTags(row.selected,report_type)) }}<br>{{ row.other }}<br>{{ convertTime(row.time) }}
             </div>
             <button class="changeButton incomplete" onclick="taskIncomplete(this)">Set as Incomplete</button>
             <button class="changeButton complete" onclick="taskComplete(this)">Set as Complete</button>
