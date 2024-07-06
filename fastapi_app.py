@@ -271,7 +271,8 @@ def printReport(request: Request, report_id: str, db: Session = Depends(get_db))
         "time_rn": int(time.time()),
         "request": request,
         "location": all_data[0].location,
-        "report_type": ReportType(all_data[0].type).name
+        "report_type": ReportType(all_data[0].type).name,
+        "parseTags": parseTags
     })
 
 

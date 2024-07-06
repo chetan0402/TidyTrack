@@ -40,7 +40,7 @@
             {% for ticket in data %}
             <tr>
                 <td>{{ ticket.ticket_id }}</td>
-                <td>{{ ticket.selected }}</td>
+                <td>{{ str(parseTags(ticket.selected,report_type))[1:-1] }}</td>
                 <td>{{ ticket.other }}</td>
                 <td>{{ ticket.time }}</td>
                 <td>{{ ticket.user }}</td>
