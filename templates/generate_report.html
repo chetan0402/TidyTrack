@@ -14,12 +14,20 @@
             border: 1px solid black;
             border-collapse: collapse;
         }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
     </style>
 </head>
 <body>
-    <div>
-        <button onclick="window.print()">Print</button>
-    </div>
     <h1>Report</h1>
     <h2>Location:- {{ location }}</h2>
     <h2>Report Type:- {{ report_type.name }}</h2>
@@ -50,5 +58,6 @@
             {% endfor %}
         </tbody>
     </table>
+    <button onclick="window.print()">Print</button>
 </body>
 </html>
