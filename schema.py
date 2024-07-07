@@ -172,7 +172,7 @@ class GenerateReportRequest(BaseModel):
 
 class SweeperGraph(BaseModel):
     time: int
-    user: str
+    sweeper: str
 
     class Config:
         from_attributes = True
