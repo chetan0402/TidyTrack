@@ -168,3 +168,18 @@ class GenerateReportRequest(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SweeperGraph(BaseModel):
+    time: int
+    user: str
+
+    class Config:
+        from_attributes = True
+
+
+class SweeperGraphResponse(BaseModel):
+    data: list[SweeperGraph]
+
+    class Config:
+        from_attributes = True

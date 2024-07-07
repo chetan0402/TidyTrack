@@ -254,6 +254,13 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
                               ReportType.OTHER)}
 
 
+@app.post("/sweeper/graph", tags=["graph"], response_model=SweeperGraphResponse)
+def sweeperGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+    if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    return {"data": getSweeperReport(db, graph_request.location, graph_request.from_time, graph_request.to_time)}
+
+
 @app.post("/report/edit")
 def reportEdit(report_edit_request: ReportEditRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, report_edit_request.token).usergroup not in [3, 4]:
