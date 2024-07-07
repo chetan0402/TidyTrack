@@ -196,6 +196,16 @@ def otherGet(request: Request, location: Union[str, None], from_time: int, to_ti
     })
 
 
+@app.get("/sweeper/get", tags=["webview"])
+def sweeperGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
+               db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
+    return template.TemplateResponse(name="dashboard_sweeper_show.html", context={
+        "request": request,
+        "data": getSweeperReport(db, location, from_time, to_time, offset=offset),
+        "convertTime": convertTime
+    })
+
+
 @app.post("/internet/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:

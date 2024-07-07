@@ -212,3 +212,18 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]]:
     ).all()
 
     return all_data
+
+
+def getSweeperReport(db: Session, location: Union[str, None],from_time:int,to_time:int, limit: int = 20, offset: int = 0)\
+        -> list[Type[models.SweeperRecords]]:
+    if location is None:
+        return db.query(models.SweeperRecords).filter(
+            models.SweeperRecords.time.between(from_time, to_time)
+        ).offset(offset * 20).limit(limit).all()
+    else:
+        return db.query(models.SweeperRecords).filter(
+            and_(
+                models.SweeperRecords.time.between(from_time, to_time),
+                models.SweeperRecords.location == location
+            )
+        ).offset(offset * 20).limit(limit).all()
