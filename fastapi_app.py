@@ -282,13 +282,17 @@ def printReport(request: Request, report_id: str, db: Session = Depends(get_db))
     all_data = getGenReport(db, report_id)
     if len(all_data) == 0:
         return Message(message="Empty Report")
+    if isinstance(all_data[0], models.SweeperRecords):
+        report_type = ReportType.SWEEPER
+    else:
+        report_type = ReportType(all_data[0].type)
     return template.TemplateResponse(name="generate_report.html", context={
         "data": all_data,
         "convertTime": convertTime,
         "time_rn": int(time.time()),
         "request": request,
         "location": all_data[0].location,
-        "report_type": ReportType(all_data[0].type),
+        "report_type": report_type,
         "parseTags": parseTags,
         "sweeper": isinstance(all_data[0], models.SweeperRecords)
     })
