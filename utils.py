@@ -192,7 +192,7 @@ def entryReport(db: Session, generate_report_request: GenerateReportRequest):
     return Message(message=report_gen_element.report_id)
 
 
-def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]]:
+def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | list[Type[models.SweeperRecords]]:
     db.query(models.ReportPara).filter(models.ReportPara.expiry < int(time.time())).delete()
     db.commit()
     if not validUUID(report_id):
@@ -201,17 +201,23 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]]:
     if report_gen_element is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
 
-    all_data = db.query(models.Report).filter(
-        and_(
+    if report_gen_element.report_type == constants.ReportType.ReportType.SWEEPER.value:
+        return db.query(models.SweeperRecords).filter(
             and_(
-                models.Report.time.between(report_gen_element.from_time, report_gen_element.to_time),
-                models.Report.location == report_gen_element.location
-            ),
-            models.Report.type == report_gen_element.report_type
-        )
-    ).all()
-
-    return all_data
+                models.SweeperRecords.time.between(report_gen_element.from_time, report_gen_element.to_time),
+                models.SweeperRecords.location == report_gen_element.location
+            )
+        ).all()
+    else:
+        return db.query(models.Report).filter(
+            and_(
+                and_(
+                    models.Report.time.between(report_gen_element.from_time, report_gen_element.to_time),
+                    models.Report.location == report_gen_element.location
+                ),
+                models.Report.type == report_gen_element.report_type
+            )
+        ).all()
 
 
 def getSweeperReport(db: Session, location: Union[str, None],from_time:int,to_time:int, limit: int = 20, offset: int = 0)\

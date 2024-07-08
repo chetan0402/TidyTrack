@@ -39,30 +39,47 @@
     <h2>Report Type:- {{ report_type.name }}</h2>
     <p>Report generated on {{ convertTime(time_rn) }}</p>
     <table>
-        <thead>
-            <tr>
-                <th>Ticket ID</th>
-                <th>Selected</th>
-                <th>Feedback</th>
-                <th>DateTime</th>
-                <th>User</th>
-                <th>Rating</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ticket in data %}
-            <tr>
-                <td>{{ ticket.ticket_id }}</td>
-                <td>{{ ", ".join(parseTags(ticket.selected,report_type)) }}</td>
-                <td>{{ ticket.other }}</td>
-                <td>{{ convertTime(ticket.time) }}</td>
-                <td>{{ ticket.user }}</td>
-                <td>{{ ticket.rating }}</td>
-                <td>{{ ticket.status }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+        {% if sweeper %}
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Sweeper Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sweeper in data %}
+                <tr>
+                    <td>{{ convertTime(sweeper.time) }}</td>
+                    <td>{{ sweeper.sweeper }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        {{% else %}}
+            <thead>
+                <tr>
+                    <th>Ticket ID</th>
+                    <th>Selected</th>
+                    <th>Feedback</th>
+                    <th>DateTime</th>
+                    <th>User</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in data %}
+                <tr>
+                    <td>{{ ticket.ticket_id }}</td>
+                    <td>{{ ", ".join(parseTags(ticket.selected,report_type)) }}</td>
+                    <td>{{ ticket.other }}</td>
+                    <td>{{ convertTime(ticket.time) }}</td>
+                    <td>{{ ticket.user }}</td>
+                    <td>{{ ticket.rating }}</td>
+                    <td>{{ ticket.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        {% endif %}
     </table>
     <button onclick="window.print()">Print</button>
 </body>

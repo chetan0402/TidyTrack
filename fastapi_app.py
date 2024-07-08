@@ -289,7 +289,8 @@ def printReport(request: Request, report_id: str, db: Session = Depends(get_db))
         "request": request,
         "location": all_data[0].location,
         "report_type": ReportType(all_data[0].type),
-        "parseTags": parseTags
+        "parseTags": parseTags,
+        "sweeper": isinstance(all_data[0], models.SweeperRecords)
     })
 
 
