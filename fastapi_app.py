@@ -215,7 +215,7 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
 
 
 @app.post("/food/graph", tags=["graph"], response_model=GraphDataResponse)
-def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+def foodGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
@@ -223,7 +223,7 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
 
 
 @app.post("/washroom/graph", tags=["graph"], response_model=GraphDataResponse)
-def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+def washroomGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
@@ -231,7 +231,7 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
 
 
 @app.post("/water/graph", tags=["graph"], response_model=GraphDataResponse)
-def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+def waterGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
@@ -239,7 +239,7 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
 
 
 @app.post("/cleaning/graph", tags=["graph"], response_model=GraphDataResponse)
-def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+def cleaningGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
@@ -247,7 +247,7 @@ def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)
 
 
 @app.post("/other/graph", tags=["graph"], response_model=GraphDataResponse)
-def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
+def otherGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     return {"data": getReport(db, graph_request.location, graph_request.from_time, graph_request.to_time,
