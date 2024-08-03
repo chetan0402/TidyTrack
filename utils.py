@@ -84,6 +84,11 @@ def verifyGroup(user: models.Userbase, group_to_verify: int):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Group mismatch")
 
 
+def verifyGroups(user: models.Userbase, groups_to_verify: list[int]):
+    for group in groups_to_verify:
+        verifyGroup(user, group)
+
+
 def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
               report_type: constants.ReportType.ReportType) -> Message:
     if not validUUID(report_element.id):
@@ -220,7 +225,8 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
         ).all()
 
 
-def getSweeperReport(db: Session, location: Union[str, None],from_time:int,to_time:int, limit: int = 20, offset: int = 0)\
+def getSweeperReport(db: Session, location: Union[str, None], from_time: int, to_time: int, limit: int = 20,
+                     offset: int = 0) \
         -> list[Type[models.SweeperRecords]]:
     if location is None:
         return db.query(models.SweeperRecords).filter(

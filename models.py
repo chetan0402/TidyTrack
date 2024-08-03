@@ -85,3 +85,10 @@ class ReportPara(Base):
     location = Column(String)
     report_type = Column(Integer)
     expiry = Column(Integer)
+
+
+class SweeperAssign(Base):
+    __tablename__ = "sweeperAssign"
+
+    sweeper = Column(String(12))
+    location = Column(String)

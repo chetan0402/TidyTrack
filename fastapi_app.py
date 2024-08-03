@@ -33,6 +33,7 @@ if not config.loaded:
     raise Exception("Config not loaded")
 
 
+# region Website serve
 @app.get("/")
 def homePage():
     return FileResponse("templates/index.html")
@@ -56,6 +57,9 @@ def privacy():
 @app.get("/terms")
 def terms():
     return FileResponse("templates/terms.html")
+
+
+# endregion
 
 
 @app.post("/internet/report", tags=["report"], response_model=Message, responses=ReportReturnDocs)
@@ -112,6 +116,7 @@ def sweeperReport(sweeper_report: SweeperReport, db: Session = Depends(get_db)):
     return Message(message=sweeper_record.uuid)
 
 
+# region Webview
 @app.get("/internet/get", tags=["webview"])
 def internetGet(request: Request, location: Union[str, None], from_time: int, to_time: int, offset: int,
                 db: Session = Depends(get_db), token: str = Depends(getUserInHeaderVerified([3, 4]))):
@@ -206,6 +211,10 @@ def sweeperGet(request: Request, location: Union[str, None], from_time: int, to_
     })
 
 
+# endregion
+
+
+# region Graphs
 @app.post("/internet/graph", tags=["graph"], response_model=GraphDataResponse)
 def internetGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, graph_request.token).usergroup not in [3, 4]:
@@ -261,6 +270,9 @@ def sweeperGraph(graph_request: GraphDataRequest, db: Session = Depends(get_db))
     return {"data": getSweeperReport(db, graph_request.location, graph_request.from_time, graph_request.to_time)}
 
 
+# endregion
+
+
 @app.post("/report/edit")
 def reportEdit(report_edit_request: ReportEditRequest, db: Session = Depends(get_db)):
     if getUserFromToken(db, report_edit_request.token).usergroup not in [3, 4]:
@@ -298,6 +310,64 @@ def printReport(request: Request, report_id: str, db: Session = Depends(get_db))
     })
 
 
+# region Supervisor-Sweeper
+@app.post("/sweeper/create")
+def sweeperCreate(sweeper_create: SweeperCreate, db: Session = Depends(get_db)):
+    verifyGroups(getUserFromToken(db, sweeper_create.token), [3, 4])
+    sweeper = models.Userbase(
+        name=sweeper_create.sweeper,
+        id=sweeper_create.sweeper,
+        phone=sweeper_create.phone,
+        usergroup=2
+    )
+    db.add(sweeper)
+
+
+@app.post("/sweeper/assign")
+def sweeperAssign(sweeper_assign: SweeperAssign, db: Session = Depends(get_db)):
+    verifyGroups(getUserFromToken(db, sweeper_assign.token), [3, 4])
+    task = models.SweeperAssign(
+        sweeper=sweeper_assign.sweeper,
+        location=sweeper_assign.location
+    )
+    db.add(task)
+    db.commit()
+
+
+@app.post("/sweeper/unassign")
+def sweeperUnassign(sweeper_unassign: SweeperAssign, db: Session = Depends(get_db)):
+    verifyGroups(getUserFromToken(db, sweeper_unassign.token), [3, 4])
+    db.query(models.SweeperAssign).filter(and_(
+        models.SweeperAssign.sweeper == sweeper_unassign.sweeper,
+        models.SweeperAssign.location == sweeper_unassign.location
+    )).delete()
+    db.commit()
+
+
+@app.post("/sweeper/remove")
+def sweeperRemove(sweeper_remove: SweeperRemove, db: Session = Depends(get_db)):
+    verifyGroups(getUserFromToken(db, sweeper_remove.token), [3, 4])
+    db.query(models.SweeperAssign).filter(
+        models.SweeperAssign.sweeper == sweeper_remove.sweeper
+    ).delete()
+    db.query(models.Userbase).filter(
+        models.Userbase.id == sweeper_remove.sweeper
+    ).delete()
+    db.commit()
+
+
+@app.post("/sweeper/list")
+def sweeperList(sweeper_list: SweeperList, db: Session = Depends(get_db)):
+    verifyGroups(getUserFromToken(db, sweeper_list.token), [3, 4])
+    return db.query(models.Userbase).filter(
+        models.Userbase.usergroup == 2
+    ).all()
+
+
+# endregion
+
+
+# region Authentication Code
 @app.post("/otp/send", tags=["account"], response_model=Message, responses={
     400: {
         "model": Message
@@ -468,6 +538,9 @@ def signup(signup_request: SignupRequest, response: Response, db: Session = Depe
         return Message(message="Wrong OTP")
 
 
+# endregion
+
+
 @app.post("/profile", tags=["account"], response_model=UserbaseModel, responses={
     401: ExceptionReturnDocs,
     422: ExceptionReturnDocs
@@ -484,6 +557,7 @@ def myReports(my_reports: MyReportsRequest, db: Session = Depends(get_db)):
     return {"reports": getReportFromUser(db, my_reports.token, offset=my_reports.offset)}
 
 
+# region Static File Serve
 @app.get("/get/locations")
 def getLocation():
     return FileResponse("locations.json")
@@ -503,6 +577,9 @@ def download():
 @app.get("/version")
 def version():
     return FileResponse(config.VERSION_FILE)
+
+
+# endregion
 
 
 @app.post("/update/code", include_in_schema=False)

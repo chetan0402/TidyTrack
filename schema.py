@@ -183,3 +183,24 @@ class SweeperGraphResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SweeperCreate(BaseModel):
+    sweeper: str
+    phone: int
+    token: str
+
+
+class SweeperAssign(BaseModel):
+    sweeper: str
+    location: str
+    token: str
+
+
+class SweeperRemove(BaseModel):
+    sweeper: str
+    token: str
+
+
+class SweeperList(BaseModel):
+    token: str
