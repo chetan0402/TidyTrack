@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, UniqueConstraint
 
 from database import Base
 
@@ -92,3 +92,7 @@ class SweeperAssign(Base):
 
     sweeper = Column(String(12))
     location = Column(String)
+
+    __table_args__ = (
+        UniqueConstraint('sweeper', 'location', name='m2m map'),
+    )
