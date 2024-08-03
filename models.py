@@ -90,9 +90,6 @@ class ReportPara(Base):
 class SweeperAssign(Base):
     __tablename__ = "sweeperAssign"
 
+    id = Column(Integer, autoincrement=True, primary_key=True)
     sweeper = Column(String(12))
     location = Column(String)
-
-    __table_args__ = (
-        UniqueConstraint('sweeper', 'location', name='m2m map'),
-    )
