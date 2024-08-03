@@ -85,8 +85,8 @@ def verifyGroup(user: models.Userbase, group_to_verify: int):
 
 
 def verifyGroups(user: models.Userbase, groups_to_verify: list[int]):
-    for group in groups_to_verify:
-        verifyGroup(user, group)
+    if user.usergroup not in groups_to_verify:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Group mismatch")
 
 
 def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
