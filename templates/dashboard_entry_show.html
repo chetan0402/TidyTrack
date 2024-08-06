@@ -82,7 +82,7 @@
 			display: none;
 		}
         .incomplete{
-            background: #DC0A0A;
+            background: #232323;
         }
         #no{
             background: #232323;
@@ -98,8 +98,8 @@
             <div>
                 {{ row.location }}<br>{{ ", ".join(parseTags(row.selected,report_type)) }}<br>{{ row.other }}<br>{{ convertTime(row.time) }}
             </div>
-            <button class="changeButton incomplete" onclick="taskIncomplete(this)">Set as Incomplete</button>
-            <button class="changeButton complete" onclick="taskComplete(this)">Set as Complete</button>
+            <button class="changeButton incomplete" onclick="taskIncomplete(this)">Resolved</button>
+            <button class="changeButton complete" onclick="taskComplete(this)">Set as Resolved</button>
         </div>
     {% endfor %}
 </div>

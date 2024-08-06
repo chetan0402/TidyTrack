@@ -1,4 +1,22 @@
 {
+  "Hostel 3": {
+    "G-A Near 001": "H3GA",
+    "G-B Near 037": "H3GB",
+    "F1-A Near 101": "H3F1A",
+    "F1-B Near 141": "H3F1B",
+    "F2-A Near 201": "H3F2A",
+    "F2-B Near 239": "H3F2B"
+  },
+  "Hostel 10B": {
+    "G-1 Near 012":"H10BG1",
+    "G-2 Near 020":"H10BG2",
+    "F1-1 Near 112":"H10BF11",
+    "F1-2 Near 120":"H10BF12",
+    "F2-1 Near 212":"H10BF21",
+    "F2-2 Near 220":"H10BF22",
+    "F3-1 Near 312":"H10BF31",
+    "F3-2 Near 320":"H10BF32"
+  },
   "Hostel 10C":{
     "G-1 Near 008":"H10CG1",
     "G-2 Near 032":"H10CG2",
