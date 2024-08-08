@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Boolean, PrimaryKeyConstraint
 
 from database import Base
 
@@ -90,6 +90,10 @@ class ReportPara(Base):
 class SweeperAssign(Base):
     __tablename__ = "sweeperAssign"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
-    sweeper = Column(String(12))
-    location = Column(String)
+    id = Column(Integer, autoincrement=True)
+    sweeper = Column(String(12), primary_key=True)
+    location = Column(String, primary_key=True)
+
+    __table_args__ = (
+        PrimaryKeyConstraint('sweeper', 'location'),
+    )
