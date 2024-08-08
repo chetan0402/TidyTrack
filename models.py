@@ -90,7 +90,6 @@ class ReportPara(Base):
 class SweeperAssign(Base):
     __tablename__ = "sweeperAssign"
 
-    id = Column(Integer, autoincrement=True)
     sweeper = Column(String(12), primary_key=True)
     location = Column(String, primary_key=True)
 
