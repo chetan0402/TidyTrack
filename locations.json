@@ -1,4 +1,12 @@
 {
+  "Hostel 4": {
+    "G-A Near 001": "H4GA",
+    "G-B Near 037": "H4GB",
+    "F1-A Near 101": "H4F1A",
+    "F1-B Near 141": "H4F1B",
+    "F2-A Near 201": "H4F2A",
+    "F2-B Near 239": "H4F2B"
+  },
   "Hostel 3": {
     "G-A Near 001": "H3GA",
     "G-B Near 037": "H3GB",
