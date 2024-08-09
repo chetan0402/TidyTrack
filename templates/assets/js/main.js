@@ -6,9 +6,9 @@ Author: GrayGrids
 (function () {
     //===== Prealoder
 
-    window.onload = function () {
+    window.addEventListener("DOMContentLoaded",() => {
         window.setTimeout(fadeout, 500);
-    }
+    })
 
     function fadeout() {
         document.querySelector('.preloader').style.opacity = '0';
