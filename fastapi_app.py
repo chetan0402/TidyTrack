@@ -568,6 +568,11 @@ def messLocation():
     return FileResponse(Path.home().joinpath("constants").joinpath("location_mess.json"))
 
 
+@app.get("/locations/room")
+def roomLocations():
+    return FileResponse(Path.home().joinpath("constants").joinpath("location_room.json"))
+
+
 @app.get("/download")
 def download():
     return FileResponse(config.LATEST_APP_PATH, filename="TidyTrack.apk",
