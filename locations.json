@@ -1,4 +1,8 @@
 {
+  "LRC Ground Floor": {
+    "Men's washroom": "LRCGM",
+    "Women's washroom": "LRCGF"
+  },
   "Hostel 4": {
     "G-A Near 001": "H4GA",
     "G-B Near 037": "H4GB",
