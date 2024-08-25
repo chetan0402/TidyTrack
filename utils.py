@@ -145,11 +145,11 @@ def getReport(db: Session, location: Union[str, None], from_time: int, to_time: 
             models.Report.time.between(from_time, to_time),
             models.Report.type == report_type.value)).offset(offset * 20).limit(limit).all()
     else:
-        if location[0]=="!":
+        if location[0] == "!":
             return db.query(models.Report).filter(and_(and_(
                 models.Report.time.between(from_time, to_time),
                 models.Report.type == report_type.value),
-                models.Report.location.startswith(location))).offset(offset * 20).limit(limit).all()
+                models.Report.location.startswith(location[1:]))).offset(offset * 20).limit(limit).all()
         return db.query(models.Report).filter(and_(and_(
             models.Report.time.between(from_time, to_time),
             models.Report.type == report_type.value),
@@ -211,12 +211,12 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
     if report_gen_element is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Report not found")
 
-    if report_gen_element.location[0]=="!":
+    if report_gen_element.location[0] == "!":
         if report_gen_element.report_type == constants.ReportType.ReportType.SWEEPER.value:
             return db.query(models.SweeperRecords).filter(
                 and_(
                     models.SweeperRecords.time.between(report_gen_element.from_time, report_gen_element.to_time),
-                    models.SweeperRecords.location.startswith(report_gen_element.location)
+                    models.SweeperRecords.location.startswith(report_gen_element.location[1:])
                 )
             ).all()
         else:
@@ -224,7 +224,7 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
                 and_(
                     and_(
                         models.Report.time.between(report_gen_element.from_time, report_gen_element.to_time),
-                        models.Report.location.startswith(report_gen_element.location)
+                        models.Report.location.startswith(report_gen_element.location[1:])
                     ),
                     models.Report.type == report_gen_element.report_type
                 )
@@ -257,11 +257,11 @@ def getSweeperReport(db: Session, location: Union[str, None], from_time: int, to
             models.SweeperRecords.time.between(from_time, to_time)
         ).offset(offset * 20).limit(limit).all()
     else:
-        if location[0]=="!":
+        if location[0] == "!":
             return db.query(models.SweeperRecords).filter(
                 and_(
                     models.SweeperRecords.time.between(from_time, to_time),
-                    models.SweeperRecords.location.startswith(location)
+                    models.SweeperRecords.location.startswith(location[1:])
                 )
             ).offset(offset * 20).limit(limit).all()
         return db.query(models.SweeperRecords).filter(
