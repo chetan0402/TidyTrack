@@ -138,22 +138,22 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
 
 
 def getReport(db: Session, location: Union[str, None], from_time: int, to_time: int,
-              report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> Tuple[list[
-    Type[models.Report]],str]:
+              report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> list[
+    Type[models.Report]]:
     if location is None:
-        return (db.query(models.Report).filter(and_(
+        return db.query(models.Report).filter(and_(
             models.Report.time.between(from_time, to_time),
-            models.Report.type == report_type.value)).offset(offset * 20).limit(limit).all(),"All")
+            models.Report.type == report_type.value)).offset(offset * 20).limit(limit).all()
     else:
         if location[0] == "!":
-            return (db.query(models.Report).filter(and_(and_(
+            return db.query(models.Report).filter(and_(and_(
                 models.Report.time.between(from_time, to_time),
                 models.Report.type == report_type.value),
-                models.Report.location.startswith(location[1:]))).offset(offset * 20).limit(limit).all(),location[1:])
-        return (db.query(models.Report).filter(and_(and_(
+                models.Report.location.startswith(location[1:]))).offset(offset * 20).limit(limit).all()
+        return db.query(models.Report).filter(and_(and_(
             models.Report.time.between(from_time, to_time),
             models.Report.type == report_type.value),
-            models.Report.location == location)).offset(offset * 20).limit(limit).all(),location)
+            models.Report.location == location)).offset(offset * 20).limit(limit).all()
 
 
 def getReportFromUser(db: Session, token: str, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
@@ -202,7 +202,7 @@ def entryReport(db: Session, generate_report_request: GenerateReportRequest):
     return Message(message=report_gen_element.report_id)
 
 
-def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | list[Type[models.SweeperRecords]]:
+def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]],str] | Tuple[list[Type[models.SweeperRecords]],str]:
     db.query(models.ReportPara).filter(models.ReportPara.expiry < int(time.time())).delete()
     db.commit()
     if not validUUID(report_id):
@@ -218,7 +218,7 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
                     models.SweeperRecords.time.between(report_gen_element.from_time, report_gen_element.to_time),
                     models.SweeperRecords.location.startswith(report_gen_element.location[1:])
                 )
-            ).all()
+            ).all() , report_gen_element.location[1:]
         else:
             return db.query(models.Report).filter(
                 and_(
@@ -228,7 +228,7 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
                     ),
                     models.Report.type == report_gen_element.report_type
                 )
-            ).all()
+            ).all() , report_gen_element.location[1:]
 
     if report_gen_element.report_type == constants.ReportType.ReportType.SWEEPER.value:
         return db.query(models.SweeperRecords).filter(
@@ -236,7 +236,7 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
                 models.SweeperRecords.time.between(report_gen_element.from_time, report_gen_element.to_time),
                 models.SweeperRecords.location == report_gen_element.location
             )
-        ).all()
+        ).all() , report_gen_element.location
     else:
         return db.query(models.Report).filter(
             and_(
@@ -246,7 +246,7 @@ def getGenReport(db: Session, report_id: str) -> list[Type[models.Report]] | lis
                 ),
                 models.Report.type == report_gen_element.report_type
             )
-        ).all()
+        ).all() , report_gen_element.location
 
 
 def getSweeperReport(db: Session, location: Union[str, None], from_time: int, to_time: int, limit: int = 20,
