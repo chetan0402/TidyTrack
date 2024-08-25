@@ -18,7 +18,7 @@ import time
 from fastapi.exceptions import HTTPException
 from starlette import status
 from schema import *
-from typing import Union, Type
+from typing import Union, Type, Tuple
 from fastapi import Header, Depends
 from database import get_db
 
@@ -138,22 +138,22 @@ def addReport(db: Session, report_element: Union[BaseReport, WithImgReport],
 
 
 def getReport(db: Session, location: Union[str, None], from_time: int, to_time: int,
-              report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> list[
-    Type[models.Report]]:
+              report_type: constants.ReportType.ReportType, limit: int = 20, offset: int = 0) -> Tuple[list[
+    Type[models.Report]],str]:
     if location is None:
-        return db.query(models.Report).filter(and_(
+        return (db.query(models.Report).filter(and_(
             models.Report.time.between(from_time, to_time),
-            models.Report.type == report_type.value)).offset(offset * 20).limit(limit).all()
+            models.Report.type == report_type.value)).offset(offset * 20).limit(limit).all(),"All")
     else:
         if location[0] == "!":
-            return db.query(models.Report).filter(and_(and_(
+            return (db.query(models.Report).filter(and_(and_(
                 models.Report.time.between(from_time, to_time),
                 models.Report.type == report_type.value),
-                models.Report.location.startswith(location[1:]))).offset(offset * 20).limit(limit).all()
-        return db.query(models.Report).filter(and_(and_(
+                models.Report.location.startswith(location[1:]))).offset(offset * 20).limit(limit).all(),location[1:])
+        return (db.query(models.Report).filter(and_(and_(
             models.Report.time.between(from_time, to_time),
             models.Report.type == report_type.value),
-            models.Report.location == location)).offset(offset * 20).limit(limit).all()
+            models.Report.location == location)).offset(offset * 20).limit(limit).all(),location)
 
 
 def getReportFromUser(db: Session, token: str, limit: int = 20, offset: int = 0) -> list[Type[models.Report]]:
