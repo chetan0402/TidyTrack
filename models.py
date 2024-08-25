@@ -3,17 +3,6 @@ from sqlalchemy import Column, Integer, String, Boolean, PrimaryKeyConstraint
 from database import Base
 
 
-class Main(Base):
-    __tablename__ = "main"
-    ticketID = Column(Integer, primary_key=True, autoincrement=True)
-    feedback = Column(String)
-    imgpath = Column(String)
-    rating = Column(Integer)
-    locationcode = Column(String)
-    time = Column(Integer)
-    schno = Column(String)
-
-
 class Tokens(Base):
     __tablename__ = "tokens"
 
