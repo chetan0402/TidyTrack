@@ -291,7 +291,7 @@ def generateReport(generate_report_request: GenerateReportRequest, db: Session =
 
 @app.get("/printReport/{report_id}")
 def printReport(request: Request, report_id: str, db: Session = Depends(get_db)):
-    all_data = getGenReport(db, report_id)
+    all_data,location = getGenReport(db, report_id)
     if len(all_data) == 0:
         return Message(message="Empty Report")
     if isinstance(all_data[0], models.SweeperRecords):
@@ -303,7 +303,7 @@ def printReport(request: Request, report_id: str, db: Session = Depends(get_db))
         "convertTime": convertTime,
         "time_rn": int(time.time()),
         "request": request,
-        "location": all_data[0].location,
+        "location": location,
         "report_type": report_type,
         "parseTags": parseTags,
         "sweeper": isinstance(all_data[0], models.SweeperRecords)
