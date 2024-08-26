@@ -202,7 +202,7 @@ def entryReport(db: Session, generate_report_request: GenerateReportRequest):
     return Message(message=report_gen_element.report_id)
 
 
-def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]],str] | Tuple[list[Type[models.SweeperRecords]],str]:
+def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]],str,bool] | Tuple[list[Type[models.SweeperRecords]],str,bool]:
     db.query(models.ReportPara).filter(models.ReportPara.expiry < int(time.time())).delete()
     db.commit()
     if not validUUID(report_id):
@@ -218,7 +218,7 @@ def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]]
                     models.SweeperRecords.time.between(report_gen_element.from_time, report_gen_element.to_time),
                     models.SweeperRecords.location.startswith(report_gen_element.location[1:])
                 )
-            ).all() , report_gen_element.location[1:]
+            ).all() , report_gen_element.location[1:] , True
         else:
             return db.query(models.Report).filter(
                 and_(
@@ -228,7 +228,7 @@ def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]]
                     ),
                     models.Report.type == report_gen_element.report_type
                 )
-            ).all() , report_gen_element.location[1:]
+            ).all() , report_gen_element.location[1:] , True
 
     if report_gen_element.report_type == constants.ReportType.ReportType.SWEEPER.value:
         return db.query(models.SweeperRecords).filter(
@@ -236,7 +236,7 @@ def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]]
                 models.SweeperRecords.time.between(report_gen_element.from_time, report_gen_element.to_time),
                 models.SweeperRecords.location == report_gen_element.location
             )
-        ).all() , report_gen_element.location
+        ).all() , report_gen_element.location , False
     else:
         return db.query(models.Report).filter(
             and_(
@@ -246,7 +246,7 @@ def getGenReport(db: Session, report_id: str) -> Tuple[list[Type[models.Report]]
                 ),
                 models.Report.type == report_gen_element.report_type
             )
-        ).all() , report_gen_element.location
+        ).all() , report_gen_element.location , False
 
 
 def getSweeperReport(db: Session, location: Union[str, None], from_time: int, to_time: int, limit: int = 20,

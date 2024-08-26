@@ -58,6 +58,9 @@
             <thead>
                 <tr>
                     <th>Ticket ID</th>
+                    {% if all %}
+                        <th>Location</th>
+                    {% endif %}
                     <th>Selected</th>
                     <th>Feedback</th>
                     <th>DateTime</th>
@@ -70,6 +73,9 @@
                 {% for ticket in data %}
                 <tr>
                     <td>{{ ticket.ticket_id }}</td>
+                    {% if all %}
+                        <td>{{ ticket.location }}</td>
+                    {% endif %}
                     <td>{{ ", ".join(parseTags(ticket.selected,report_type)) }}</td>
                     <td>{{ ticket.other }}</td>
                     <td>{{ convertTime(ticket.time) }}</td>
