@@ -1,9 +1,11 @@
 {
   "LRC Ground Floor": {
+    "all": "!LRC",
     "Men's washroom": "LRCGM",
     "Women's washroom": "LRCGF"
   },
   "Hostel 4": {
+    "all": "!H4",
     "G-A Near 001": "H4GA",
     "G-B Near 037": "H4GB",
     "F1-A Near 101": "H4F1A",
@@ -12,6 +14,7 @@
     "F2-B Near 239": "H4F2B"
   },
   "Hostel 3": {
+    "all": "!H3",
     "G-A Near 001": "H3GA",
     "G-B Near 037": "H3GB",
     "F1-A Near 101": "H3F1A",
@@ -20,6 +23,7 @@
     "F2-B Near 239": "H3F2B"
   },
   "Hostel 10B": {
+    "all": "!H10B",
     "G-1 Near 012":"H10BG1",
     "G-2 Near 020":"H10BG2",
     "F1-1 Near 112":"H10BF11",
@@ -30,6 +34,7 @@
     "F3-2 Near 320":"H10BF32"
   },
   "Hostel 10C":{
+    "all": "!H10C",
     "G-1 Near 008":"H10CG1",
     "G-2 Near 032":"H10CG2",
     "F1-1 Near 108":"H10CF11",
@@ -40,6 +45,7 @@
     "F3-2 Near 332":"H10CF32"
   },
   "Hostel 10D":{
+    "all": "!H10D",
     "G-1 Near 008":"H10DG1",
     "G-2 Near 016":"H10DG2",
     "F1-1 Near 108":"H10DF11",
@@ -50,6 +56,7 @@
     "F3-2 Near 316":"H10DF32"
   },
   "Guest House 10C": {
+    "all": "!H10CGH",
     "Room 001": "H10CGHG1",
     "Room 002": "H10CGHG2",
     "Room 003": "H10CGHG3",
@@ -61,6 +68,7 @@
     "Room 203": "H10CGHF23"
   },
   "Guest House 10D": {
+    "all": "!H10DGH",
     "Room 001": "H10DGHG1",
     "Room 002": "H10DGHG2",
     "Room 003": "H10DGHG3",
@@ -72,6 +80,7 @@
     "Room 203": "H10DGHF23"
   },
   "NTB Block A": {
+    "all": "!NTA",
     "G-1 Near TA102 (STAFF) Male": "NTA102M",
     "G-1 Near TA102 (STAFF) Female": "NTA102F",
     "G-2 Near TA111 Male": "NTA111M",
@@ -86,6 +95,7 @@
     "F1-3 Near TA212 Female": "NTA212F"
   },
   "NTB Block B": {
+    "all": "!NTB",
     "G-1 Near TB102 (STAFF) Male": "NTB102M",
     "G-1 Near TB102 (STAFF) Female": "NTB102F",
     "G-2 Near TB111 Male": "NTB111M",
@@ -100,12 +110,14 @@
     "F1-3 Near TB212 Female": "NTB212F"
   },
   "NTB Block C": {
+    "all": "!NTC",
     "G-1 Near TC102 Male": "NTC102M",
     "G-1 Near TC102 Female": "NTC102F",
     "F1-1 Near TC202 Male": "NTC202M",
     "F1-1 Near TC202 Female": "NTC202F"
   },
   "NTB Block D": {
+    "all": "!NTD",
     "G-1 Near TD102 Male": "NTD102M",
     "G-1 Near TD102 Female": "NTD102F",
     "F1-1 Near TD202 Male": "NTD202M",
