@@ -1,0 +1,5 @@
+templates/assets/scss/** linguist-vendored
+templates/assets/fonts/** linguist-vendored
+templates/assets/css/** linguist-vendored
+templates/assets/js/** linguist-vendored
+templates/assests/mail/** linguist-vendored
